@@ -1,0 +1,84 @@
+Note: 
+	instanceof
+0) o = new Object()
+
+1) Object.assign():
+	Object.assign(target, ...sources)
+
+2) Object.create()
+	Object.create(proto[, propertiesObject])
+
+3) Object.defineProperties():
+	Syntax:
+	Object.defineProperties(obj, props)
+	example:
+	Object.defineProperties(object1, {
+  
+					property1: 
+						{
+    
+							value: 42,
+    
+							writable: true
+  
+						},
+  
+					property2: {}
+					
+}
+				);
+	configurable, enumerable, value, writable, get, set
+
+4) Object.defineProperty()
+	Object.defineProperty(obj, prop, descriptor)
+	
+Object.defineProperty(object1, 'property1', {
+  value: 42,
+  writable: false
+});
+
+5) Object.entries() => Gell all properties
+6) Object.freeze() => freeze values
+
+7)Object.getOwnPropertyDescriptor() :
+	
+const descriptor1 = Object.getOwnPropertyDescriptor(object1, 'property1');
+
+	console.log(descriptor1.configurable);
+
+  Object.getOwnPropertyDescriptors():
+	const descriptors1 = Object.getOwnPropertyDescriptors(object1);
+
+
+	console.log(descriptors1.property1.writable);
+
+8)Object.getOwnPropertyNames()
+	console.log(Object.getOwnPropertyNames(object1));
+
+9) Object.isExtensible()
+
+10) Object.preventExtensions();
+
+11) Object.isFrozen()
+
+12) Object.seal():preventing new properties from being added 
+
+13) Object.isSealed()
+
+14) Object.keys()
+	
+// expected output: Array ["a", "b", "c"]
+
+15) Object.values()
+	const object1 = {
+  a: 'somestring',
+  b: 42,
+  c: false
+};
+	console.log(Object.values(object1));
+	// expected output: Array ["somestring", 42, false]
+
+16) obj.hasOwnProperty(prop)
+o.hasOwnProperty('propOne');
+
+17) Object.is(prop1, prop2);

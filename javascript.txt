@@ -1,0 +1,21 @@
+Array Function
+1) concat
+2) every
+3) filter
+4) foreach
+5) indexOf
+6) join
+7) lastIndexOf
+8) map
+9) pop
+10) push
+11) reduce
+12) reduceRight
+13) reverse
+14) shift
+15) slice
+16) some
+17) sort
+18) splice => add/remove specific element in the array
+19) toString()
+20) unshift()

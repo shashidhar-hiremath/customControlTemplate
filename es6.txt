@@ -1,0 +1,179 @@
+ES6:
+
+1) let & const
+2) IIFE immediatly invoked function expression (function(){}());
+3) template literals: ${}
+4) Multiline : ``
+5) Arrow function: 
+	()=>
+	()=>{}
+	x=>x*x
+6) for...of
+	const arr = ['a', 'b', 'c'];
+	for (const elem of arr) {
+    		console.log(elem);
+	}
+***	entries:both index and value of each array element,new Array method entries() and destructuring:
+
+		for (const [index, elem] of arr.entries()) {
+    			console.log(index+'. '+elem);
+		}
+7) Handling parameter default values
+	function foo(x=0, y=0) {
+    			···
+	}
+
+8) Making the parameter optional
+	selectEntries({ start: 0, end: -1 });
+	function selectEntries({ start=0, end=-1, step=1 }) {
+    		···
+	}
+
+9) From arguments to rest parameters
+
+	function logAllArguments(...args) {
+    		for (const arg of args) {
+        		console.log(arg);
+    		}
+	}
+
+10) From apply() to the spread operator (...) 
+ES5 – apply():
+
+> Math.max.apply(Math, [-1, 5, 11, 3])
+11
+ 	
+ES6 – spread operator:
+
+> Math.max(...[-1, 5, 11, 3])
+11
+
+11) Concat : [...arr1, ...arr2, ...arr3]
+
+12)
+
+	const obj = {
+    		foo() {
+        		···
+    		},
+    		bar() {
+        		this.foo();
+    		},
+	}
+
+13) constructor 
+
+	ES5
+	function Person(name){
+		this.name = name;
+	}
+	
+	Person.prototype.describe = function(){}
+	
+   ES6
+	class Person {
+		constructor(name){
+			this.name = name;
+		}
+		describe(){
+		}
+	}
+
+14) Derived class
+	--ES5--
+	function Person(name){
+		this.name = name;
+	}
+	
+	function Employee(name){
+		Person.call(this, name);
+		this.name = name;
+	}	
+	
+	Employee.proptotype = Object.create(Person.prototype);
+	
+	Employee.prototype.constructor = Employee;
+	
+	Employee.prototype.describe = function () {
+    		return Person.prototype.describe.call(this) // super.describe()
+           + ' (' + this.title + ')';
+	};
+
+	--ES6--
+	
+	class Employee extends Person {
+    		constructor(name, title) {
+        		super(name);
+        		this.title = title;
+    		}
+    		describe() {
+        		return super.describe() + ' (' + this.title + ')';
+    		}
+	}
+
+15) class MyError extends Error {
+	}
+
+16) From objects to Maps
+
+	const map = new Map();
+	function countWords(word) {
+    		const count = map.get(word) || 0;
+    		map.set(word, count + 1);
+	}
+
+17)New string methods 
+
+if (str.indexOf('x') === 0) {} // ES5
+if (str.startsWith('x')) {} // ES6
+
+function endsWith(str, suffix) { // ES5
+  var index = str.indexOf(suffix);
+  return index >= 0
+    && index === str.length-suffix.length;
+}
+str.endsWith(suffix); // ES6
+
+if (str.indexOf('x') >= 0) {} // ES5
+if (str.includes('x')) {} // ES6
+
+From join to repeat (the ES5 way of repeating a string is more of a hack):
+
+new Array(3+1).join('#') // ES5
+'#'.repeat(3) // ES6
+
+18) New Array methods
+
+arr.indexOf(NaN); // -1
+arr.findIndex(x => Number.isNaN(x)); // 1
+
+19) From Array.prototype.slice() to Array.from() or the spread operator 
+
+var arr1 = Array.prototype.slice.call(arguments); // ES5
+
+20) From apply() to Array.prototype.fill()
+const arr2 = Array.from(arguments); // ES6
+
+21) In ES5, you can use apply(), as a hack, to create in Array of arbitrary length that is filled with undefined:
+
+// Same as Array(undefined, undefined)
+var arr1 = Array.apply(null, new Array(2));
+    // [undefined, undefined]
+In ES6, fill() is a simpler alternative:
+
+const arr2 = new Array(2).fill(undefined);
+    // [undefined, undefined]
+fill() is even more convenient if you want to create an Array that is filled with an arbitrary value:
+
+// ES5
+var arr3 = Array.apply(null, new Array(2))
+    .map(function (x) { return 'x' });
+    // ['x', 'x']
+
+// ES6
+const arr4 = new Array(2).fill('x');
+    // ['x', 'x']
+fill() replaces all Array elements with the given value. Holes are treated as if they were elements.
+	
+
+document.addEventListener('DOMContentLoaded', function() {})

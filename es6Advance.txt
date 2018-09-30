@@ -1,0 +1,203 @@
+1. New Array features
+	a) Array.from(arrayLike, mapFunc?, thisArg?)
+	Eg: 	const spans = document.querySelectorAll('span.name');
+		// map(), generically:
+		const names1 = Array.prototype.map.call(spans, s => s.textContent);
+		// Array.from():
+		const names2 = Array.from(spans, s => s.textContent);
+
+	b) Array.of(...items)
+	Eg: class MyArray extends Array {
+    			···
+	   }
+		console.log(MyArray.of(3, 11, 8) instanceof MyArray); // true
+		console.log(MyArray.of(3).length === 1); // true
+
+	c) Iterating over Arrays
+	Eg: Array.prototype.entries()
+	    Array.prototype.keys()
+	    Array.prototype.values()
+
+	d) Searching for Array elements
+	Eg: [6, -5, 8].find(x => x < 0)
+
+	e) Finding NaN via findIndex() 
+	Eg: [NaN].findIndex(y => Object.is(NaN, y))
+
+	f) Array.prototype.copyWithin()
+	Eg: > const arr = [0,1,2,3];
+	    > arr.copyWithin(2, 0, 2)
+	    [ 0, 1, 0, 1 ]]
+
+	g)  Array.prototype.fill() 
+	Eg: > const arr = ['a', 'b', 'c'];
+	    > arr.fill(7)
+	    [ 7, 7, 7 ]
+
+	h) ES6 and holes in Arrays
+	Eg: > [...[,'a'].entries()]
+	      [ [ 0, undefined ], [ 1, 'a' ] ]
+	    > Array.from({1: 'a', length: 2})
+	      [ undefined, 'a' ]
+
+Method	Holes are	 
+concat	Preserved	['a',,'b'].concat(['c',,'d']) ? ['a',,'b','c',,'d']
+copyWithinES6	Preserved	[,'a','b',,].copyWithin(2,0) ? [,'a',,'a']
+entriesES6	Elements	[...[,'a'].entries()] ? [[0,undefined], [1,'a']]
+every	Ignored	[,'a'].every(x => x==='a') ? true
+fillES6	Filled	new Array(3).fill('a') ? ['a','a','a']
+filter	Removed	['a',,'b'].filter(x => true) ? ['a','b']
+findES6	Elements	[,'a'].find(x => true) ? undefined
+findIndexES6	Elements	[,'a'].findIndex(x => true) ? 0
+forEach	Ignored	[,'a'].forEach((x,i) => log(i)); ? 1
+indexOf	Ignored	[,'a'].indexOf(undefined) ? -1
+join	Elements	[,'a',undefined,null].join('#') ? '#a##'
+keysES6	Elements	[...[,'a'].keys()] ? [0,1]
+lastIndexOf	Ignored	[,'a'].lastIndexOf(undefined) ? -1
+map	Preserved	[,'a'].map(x => 1) ? [,1]
+pop	Elements	['a',,].pop() ? undefined
+push	Preserved	new Array(1).push('a') ? 2
+reduce	Ignored	['#',,undefined].reduce((x,y)=>x+y) ? '#undefined'
+reduceRight	Ignored	['#',,undefined].reduceRight((x,y)=>x+y) ? 'undefined#'
+reverse	Preserved	['a',,'b'].reverse() ? ['b',,'a']
+shift	Elements	[,'a'].shift() ? undefined
+slice	Preserved	[,'a'].slice(0,1) ? [,]
+some	Ignored	[,'a'].some(x => x !== 'a') ? false
+sort	Preserved	[,undefined,'a'].sort() ? ['a',undefined,,]
+splice	Preserved	['a',,].splice(1,1) ? [,]
+toString	Elements	[,'a',undefined,null].toString() ? ',a,,'
+unshift	Preserved	[,'a'].unshift('b') ? 3
+valuesES6	Elements	[...[,'a'].values()] ? [undefined,'a']
+
+	i) Creating Arrays filled with values
+	> new Array(3).fill(7)
+	  [ 7, 7, 7 ]
+	> Array.from(new Array(5), (x,i) => i*2)
+	  [ 0, 2, 4, 6, 8 ]
+	> ['a',,'c'].filter(() => true)
+	  [ 'a', 'c' ]
+
+2. Maps and Sets
+	 const map = new Map();
+
+	> map.set('foo', 123);
+	> map.get('foo')
+	  123
+	> map.has('foo')
+	  true
+	> map.delete('foo')
+	  true
+
+	const map = new Map([
+    			[ 1, 'one' ],
+    			[ 2, 'two' ],
+    			[ 3, 'three' ], // trailing comma is ignored
+		]);
+	Alternatively, the set() method is chainable:
+		const map = new Map()
+				.set(1, 'one')
+				.set(2, 'two')
+				.set(3, 'three');
+
+	b) Keys : 
+		const KEY1 = {};
+		map.set(KEY1, 'hello');
+		console.log(map.get(KEY1)); // hello
+
+	c) What keys are considered equal
+		> map.set(NaN, 123);
+		> map.get(NaN)//123
+
+		> map.set(-0, 123);
+		> map.get(+0)//123
+	
+		> new Map().set({}, 1).set({}, 2).size
+
+	d) Iterating over Maps: keys(), values(), entries()
+		for (const entry of map.entries()) {
+    			console.log(entry[0], entry[1]);
+		}
+
+	e)  Converting iterables
+	> const map = new Map().set(false, 'no').set(true, 'yes');
+	> [...map.keys()]
+	  [ false, true ]
+
+	f) Combining Maps: 
+	> const combinedMap = new Map([...map1, ...map2])
+	> [...combinedMap] // convert to Array to display
+
+2) WeakMap:
+	WeakMaps work mostly like Maps, with the following differences:
+		WeakMap keys are objects (values can be arbitrary values)
+		WeakMap keys are weakly held
+		You can’t get an overview of the contents of a WeakMap
+		You can’t clear a WeakMap	
+
+	Eg: 
+		addListener = new WeakMap();
+		const obj = {};
+		addListener(obj, () => console.log('hello'));
+		addListener(obj, () => console.log('world'));
+
+3) Set:
+Managing single elements:
+
+	> const set = new Set();
+	> set.add('red')
+
+	> set.has('red')
+	  true
+	> set.delete('red')
+	  true
+	> set.has('red')
+	  false
+Determining the size of a Set and clearing it:
+
+	> const set = new Set();
+	> set.add('red')
+	> set.add('green')
+
+	> set.size
+	  2
+	> set.clear();
+	> set.size
+	  0
+
+Union, intersection, difference 
+	i) Union:
+		const a = new Set([1,2,3]);
+		const b = new Set([4,3,2]);
+		const union = new Set([...a, ...b]);
+    		// {1,2,3,4}
+
+	ii) Intersection:
+		const a = new Set([1,2,3]);
+		const b = new Set([4,3,2]);
+		const intersection = new Set(
+    		[...a].filter(x => b.has(x)));
+    		// {2,3}
+	iii) Difference :
+		const a = new Set([1,2,3]);
+		const b = new Set([4,3,2]);
+		const difference = new Set(
+    		[...a].filter(x => !b.has(x)));
+    		// {1}
+
+3) Iterables and iterators:
+
+Given that JavaScript does not have interfaces, Iterable is more of a convention:
+
+Source: A value is considered iterable if it has a method whose key is the symbol Symbol.iterator that returns a so-called iterator. The iterator is an object that returns values via its method next(). We say: it iterates over the items (the content) of the iterable, one per method call.
+Consumption: Data consumers use the iterator to retrieve the values they are consuming.
+
+> const arr = ['a', 'b', 'c'];
+> const iter = arr[Symbol.iterator]();
+> iter.next()
+{ value: 'a', done: false }
+> iter.next()
+{ value: 'b', done: false }
+> iter.next()
+{ value: 'c', done: false }
+> iter.next()
+{ value: undefined, done: true }

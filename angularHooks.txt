@@ -1,3 +1,10 @@
+https://github.com/CodAffection/Angular-7-Master-Detail-CRUD-with-Web-
+
+API/tree/master/Angular7/src
+https://mindmajix.com/javascript-interview-questions
+https://medium.com/coderbyte/a-tricky-javascript-interview-question-asked-by-
+
+google-and-amazon-48d212890r7/srcsrc
 https://angulardemoshopee.firebaseio.com/
 //cli: command line interface
 //npm: node package manager
@@ -8,7 +15,11 @@ For crate new project : ng new my-app
 To run app: ng serve or ng serve --open or npm start
 Install Emmit.
 
-The Angular CLI is a command line interface tool that can create a project, add files, and perform a variety of ongoing development tasks such as testing, bundling, and deployment.
+The Angular CLI is a command line interface tool that can create a project, add 
+
+files, and perform a variety of ongoing development tasks such as testing, 
+
+bundling, and deployment.
 ----------------------------------------------------------------
 @Component() : Decorator
 Creating component: 
@@ -20,7 +31,9 @@ import { Component } from '@angular/core';
 @Component({
   
 		selector: 'app-root',
- //property : [app-root] //class : [.app-root]  	      	templateUrl: './app.component.html',//html : '<p> component </p>'
+ //property : [app-root] //class : [.app-root] 
+
+ 	      	templateUrl: './app.component.html',//html : '<p> component </p>'
   
 	      	styleUrls: ['./app.component.css']
  // style: '[.pop {color:#f00;}]'
@@ -50,6 +63,15 @@ Proper two-way binding : [()]
 
 Binding Class : [ngClass] = "{}"
 	<p [ngClass]="{bg-black: this.pop == 'online'}"> </p>
+<div [ngClass]="['example-class', 'other-class']"></div>
+<div [class.example-class]="condition"></div>
+<div [className]="'class' + someValue"></div>
+<div [ngClass]="{
+  'example-class': condition,
+  'other-class': !condition
+}">
+</div>
+
 	Here we add condition, if its true than it will add bg-black.
 
 Binding Style : [ngStyle] = "{}"
@@ -69,25 +91,65 @@ Binding switch :
 
 Binding for : *ngFor="let item of list; let i = index"
 	<ul>
-		<li *ngFor="let item of itemlList; let i = index"> <span> {{ i }}				{{item}}</span> 
+		<li *ngFor="let item of itemlList; let i = index"> <span> {{ i }}	
+
+			{{item}}</span> 
 		</li>
 	</ul>
+
+:host-context: 
+	:host-context(.red-theme) .btn-theme {
+        	background: red;
+      	}
+	<div class="blue-theme">
+    		<themeable-button></themeable-button>
+	</div>
+
+:host : root element e.g <themeable-button></themeable-button>
+
+::ng-deep : :host ::ng-deep or /deep/ or >>>
 ----------------------------------------------------------------
 
 Lifecycle hook 
-ngOnChanges: this executed multiple time, this is executed right at start when new component is created , it is always called one of inline bound property changes, that means these proprties receive new values. 
+ngOnChanges: this executed multiple time, this is executed right at start when new 
 
-ngOnInit : get executed once the component as initialized, it can also run after constructor is called
+component is created , it is always called one of inline bound property changes, 
 
-ngDoCheck: it runs multiple time, this run whenever change detection runs, its runs when some thing chage is happend in template, on ever check angular makes, but not such if any thing but also when we click on button because its an event angulr as to check is some thing as changed or time fired or observable fired, its good if you need some check on every chagne detection cycle like.
+that means these proprties receive new values. 
 
-ngAfterContentInit: is called when ever the content which is project to the Y ngcontent has been initialized , not the view of the content itself but instead you could say the view of the parent tell what component  esspecially apart which will get added to our component through ngcontent  
+ngOnInit : get executed once the component as initialized, it can also run after 
 
-ngAfterContentChecked: is executed whenevr change detection checked this content we're projecting into our component 
+constructor is called
 
-ngAfterViewInit: is called when ever view of our oen component as been finised inilizing
+ngDoCheck: it runs multiple time, this run whenever change detection runs, its runs 
 
-ngAfterViewChecked: all the changes has been checked and displayed on our view or no change is detected by angular
+when some thing chage is happend in template, on ever check angular makes, but not 
+
+such if any thing but also when we click on button because its an event angulr as 
+
+to check is some thing as changed or time fired or observable fired, its good if 
+
+you need some check on every chagne detection cycle like.
+
+ngAfterContentInit: is called when ever the content which is project to the Y 
+
+ngcontent has been initialized , not the view of the content itself but instead you 
+
+could say the view of the parent tell what component  esspecially apart which will 
+
+get added to our component through ngcontent  
+
+ngAfterContentChecked: is executed whenevr change detection checked this content 
+
+we're projecting into our component 
+
+ngAfterViewInit: is called when ever view of our oen component as been finised 
+
+inilizing
+
+ngAfterViewChecked: all the changes has been checked and displayed on our view or 
+
+no change is detected by angular
 
 ngdestory: when component is destoryed 
 ----------------------------------------------------------------
@@ -191,16 +253,24 @@ import { Directive } from '@angular/core';
 export class HighLight{
 	@Input('appHighLight') highlightColor:string = 'blue';
   
-  	@HostBinding('style.backgroundColor') backgroundColor: string;
+  	
+
+@HostBinding('style.backgroundColor') backgroundColor: string;
   
 	constructor(private elRef:ElementRef, private render: Renderer2) {
    
    }
 
-   	ngOnInit(){
+   
+
+	ngOnInit(){
     
 		this.backgroundColor = this.defaultColor;
-    						//  this.render.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+    				
+
+		//  this.render.setStyle(this.elRef.nativeElement, 'background-
+
+color', 'blue');
    
 	}
 
@@ -208,7 +278,9 @@ export class HighLight{
 
 	@HostListener('mouseenter') mouseover(eventData: Event){
     
-	// this.render.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+	// this.render.setStyle(this.elRef.nativeElement, 'background-color', 
+
+'blue');
     
 	this.backgroundColor = this.highlightColor;
    }
@@ -217,7 +289,9 @@ export class HighLight{
  
 @HostListener('mouseleave') mouseleave(eventData: Event){
     
-// this.render.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+// this.render.setStyle(this.elRef.nativeElement, 'background-color', 
+
+'transparent');
      
 	this.backgroundColor = this.defaultColor;
     
@@ -272,7 +346,9 @@ export class UnlessDirective {
   
 	}
   
-	constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) { 
+	constructor(private templateRef: TemplateRef<any>, private vcRef: 
+
+ViewContainerRef) { 
 
   }
 
@@ -295,6 +371,12 @@ add service in Module provider:
 	provider:[service1]
 })
 
+or 
+/---------------------------\
+@Injectable({
+  providedIn: 'root'
+})
+\---------------------------/
 we can also add in component 
 
 in Component 
@@ -327,9 +409,17 @@ Setting Router settings In app module:
 import { Routes, RouterModule } from @angular/router;
 const appRoutes: Routes [
 			{path:"",component: HomeComponent}, //default route
-			{path:"users",component: UserComponent},//users component route
-			{path:"users/login",component: LoginComponent}//login component under users component route
-			{path:"users/:id/:name",component: UserDetailComponent}, // this would open users coponent with taking user id & name in url and accepting that in component
+			{path:"users",component: UserComponent},//users component 
+
+route
+			{path:"users/login",component: LoginComponent}//login 
+
+component under users component route
+			{path:"users/:id/:name",component: UserDetailComponent}, // 
+
+this would open users coponent with taking user id & name in url and accepting that 
+
+in component
 {path:"customer",component: CustomerComponent, children:[
 	{path:":id",component:CustInfoComponent}
 ]},//adding child routes
@@ -352,6 +442,16 @@ In app.module.ts
 export class AppModule { }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Loading module main module of pages
+
+const routes: Routes = [
+	{
+	   path: 'login'
+	   loadChildren: './login/login.module#LoginModule'
+	}
+]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 To load routed component
 <router-outlet></router-outlet>
 
@@ -368,14 +468,20 @@ export class HomeComponent{
 	}
 	
 	onBtnClick(){
-		this.router.navigate(['/server','1','edit'], {queryParams:{allowEdit:1}, fragment:'loading'});//(o/p: /server/1/edit?allowEdit=1#loading)
+		this.router.navigate(['/server','1','edit'], {queryParams:
 
-	//this.routes.navigate(['servers'],{relativeTo:this.routeActive});// relative link
+{allowEdit:1}, fragment:'loading'});//(o/p: /server/1/edit?allowEdit=1#loading)
+
+	//this.routes.navigate(['servers'],{relativeTo:this.routeActive});// 
+
+relative link
 	}
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 adding class active to activated route link
- <li role="presentation" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/">Home</a></li>
+ <li role="presentation" routerLinkActive="active" 
+
+[routerLinkActiveOptions]="{exact:true}"><a routerLink="/">Home</a></li>
    
 
 routerLinkActive: which class need to added
@@ -403,12 +509,16 @@ export class users{
 
 for preserving query parameters
 
- this.routes.navigate(['edit'],{relativeTo: this.routeActive, queryParamsHandling:'preserve'});
+ this.routes.navigate(['edit'],{relativeTo: this.routeActive, 
+
+queryParamsHandling:'preserve'});
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 CanDeactivate:
 
-This would help while moving out of form when some change are that should not be lost
+This would help while moving out of form when some change are that should not be 
+
+lost
 
 1)Create a gaurd : can-deactiveate-guard.service.ts
 	import { CanDeactivate } from @angular/router;
@@ -416,10 +526,16 @@ This would help while moving out of form when some change are that should not be
 		CanDeactivate()=>Observable<boolean> | Promise<boolean> | boolean;
 	}
 
-	export class CanDeactivateGaurd implements CanDeactivate<CanComponentDeactivate> {
-		CanDeactivate(component: CanDeactivateGaurd, 			      currentRoute:ActivateRouteSnapshot, 
+	export class CanDeactivateGaurd implements 
+
+CanDeactivate<CanComponentDeactivate> {
+		CanDeactivate(component: CanDeactivateGaurd, 			    
+
+  currentRoute:ActivateRouteSnapshot, 
 			      currentState: RouterStateSnapshot,
-			      nextState: RouterStateSnapshot):Observable<boolean> | Promise<boolean> | boolean{
+			      nextState: RouterStateSnapshot):Observable<boolean> | 
+
+Promise<boolean> | boolean{
 	return component.canDeactivate();
 }
 
@@ -427,7 +543,9 @@ In component:
 import above service in component
 import { CanComponentDeactivate } from './can-deactiveate-guard.service';
 
-Add below function in component: if this returns false component will not move to other link
+Add below function in component: if this returns false component will not move to 
+
+other link
 canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     
 	if(!this.allowEdit){
@@ -435,7 +553,9 @@ canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     }
 
     
-	if((this.serverName !== this.server.name || this.serverStatus !== this.server.status) && !this.changesProperty) 
+	if((this.serverName !== this.server.name || this.serverStatus !== 
+
+this.server.status) && !this.changesProperty) 
 {
       return confirm("Do you want discard changes?");
     }
@@ -447,7 +567,9 @@ canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
 }
 
 In route add canDeactivate
-{path: ':id/edit', component:EditServerComponent, canDeactivate:[CanDeactivateGuard]},
+{path: ':id/edit', component:EditServerComponent, canDeactivate:
+
+[CanDeactivateGuard]},
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Auth
@@ -459,7 +581,9 @@ export class AuthGaurd implements CanActivate, CanActivateChild {
     }
 //can activate should return true or false
     canActivate(route: ActivatedRouteSnapshot, 
-        state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+        state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | 
+
+boolean {
         return this.authService.isAuthentication().then(
             (authentication: boolean)=>{
                  if(authentication){
@@ -473,7 +597,9 @@ export class AuthGaurd implements CanActivate, CanActivateChild {
     }
 
     canActivateChild(route: ActivatedRouteSnapshot, 
-        state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+        state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | 
+
+boolean {
         return this.canActivate(route,state);
     }
 }
@@ -483,7 +609,9 @@ In route : add AuthGaurd
     //canActivate:[AuthGaurd],
     canActivateChild:[AuthGaurd],    
     component:ServersComponent, children:[
-      {path: ':id/edit', component:EditServerComponent, canDeactivate:[CanDeactivateGuard]},
+      {path: ':id/edit', component:EditServerComponent, canDeactivate:
+
+[CanDeactivateGuard]},
       {path: ':id', component:ServerComponent, resolve:{server:ServerResolver}}
     ]},
 
@@ -506,7 +634,9 @@ export class ServerResolver implements Resolve<Server> {
     constructor(private serverService: ServersService){
 
     }
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):Observable<Server> | Promise<Server> | Server{
+    resolve(route: ActivatedRouteSnapshot, state: 
+
+RouterStateSnapshot):Observable<Server> | Promise<Server> | Server{
         return this.serverService.getServer(+route.params['id']);
     }
 
@@ -533,7 +663,9 @@ Route :
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Not found page:
 
- {path: 'not-found', component:ErrorPageComponent, data:{message: 'Page not found'}},    
+ {path: 'not-found', component:ErrorPageComponent, data:{message: 'Page not 
+
+found'}},    
     {path: '**', redirectTo:'/not-found'},  
 
 --------------------------------------------------------------------------------
@@ -557,8 +689,12 @@ import { Subscription } from 'rxjs/Subscription';//Import
 private subscription: Subscription;
  // to store subscription
 			
-this.subscription = this.shoppingListService.ingredientChange.subscribe((ingredients:Ingredient[])=> {this.ingredients = ingredients});
-// to execute subscription
+this.subscription = this.shoppingListService.ingredientChange.subscribe
+
+((ingredients:Ingredient[])=> {this.ingredients = ingredients});
+// to execute 
+
+subscription
 
 
 2)interval
@@ -626,7 +762,9 @@ Form :
 type="text" 
 id="username" 
 class="form-control"
- ngModel 	 		name="username"
+ ngModel 	 	
+
+	name="username"
  required #username="ngModel">
 	//#username="ngModel" : add refernce to model
 	
@@ -637,7 +775,9 @@ class="form-control"
 	e.g:<div 
 id="user-data" 
 ngModelGroup="userGroupData"
-	    #userGroupData="ngModelGroup"></div>
+	    
+
+#userGroupData="ngModelGroup"></div>
 	
 	iii) Adding value to control: [value]="gender"
 	<input 
@@ -696,7 +836,11 @@ type="radio"
 	ix) Getting values for form control: 
 	// here this.user is object declare in class 
  		this.user.email = this.form.value.userGroupData.email;
-  //its in grp userFroupData     		this.user.secretQuestion = this.form.value.secretQuestion;
+  //its in 
+
+grp userFroupData     		this.user.secretQuestion = 
+
+this.form.value.secretQuestion;
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -709,7 +853,9 @@ type="radio"
 	})
 
 ````````i) Creating form group: signupForm:FormGroup;
-		This is required for storing form conrtol as a group of input/form 		controls
+		This is required for storing form conrtol as a group of input/form 	
+
+	controls
 		Also need to specify form group in template:
 		<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         
@@ -730,9 +876,13 @@ type="radio"
           
 			'userData': new FormGroup({
             
-				'username': new FormControl(null, [Validators.required, this.forbinddenNames.bind(this)]),
+				'username': new FormControl(null, 
+
+[Validators.required, this.forbinddenNames.bind(this)]),
             
-				'email': new FormControl(null, [Validators.required, Validators.email], this.asyncForbinddenValidate)
+				'email': new FormControl(null, 
+
+[Validators.required, Validators.email], this.asyncForbinddenValidate)
           
 			}),
           
@@ -749,7 +899,9 @@ type="radio"
 	//Resetting all form control
 	this.signupForm.reset();
 	//Resetting single control
-	this.signupForm.get('userData.username').reset();// here userData is formgroup(formGroupName) & username is control.
+	this.signupForm.get('userData.username').reset();// here userData is 
+
+formgroup(formGroupName) & username is control.
 	
 ````````v) Value change trigger observalble:  valueChanges
 	
@@ -784,17 +936,25 @@ type="radio"
 
 		
 	How to use in template: 
-'username': new FormControl(null, [Validators.required, this.forbinddenNames.bind(this)]),
+'username': new FormControl(null, [Validators.required, this.forbinddenNames.bind
+
+(this)]),
 	
 	Showing error message: signupForm.get('userData.username')
 	
 	<span 
-*ngIf="!signupForm.get('userData.username').valid && signupForm.get('userData.username').touched"
+*ngIf="!signupForm.get('userData.username').valid && signupForm.get
+
+('userData.username').touched"
  class="help-bolck">
 
-                    <span *ngIf="signupForm.get('userData.username').errors['nameIsForbidden']">Invalid user name.</span>
+                    <span *ngIf="signupForm.get('userData.username').errors
 
-                    <span *ngIf="signupForm.get('userData.username').errors['required']">Please enter user name.</span>
+['nameIsForbidden']">Invalid user name.</span>
+
+                    <span *ngIf="signupForm.get('userData.username').errors
+
+['required']">Please enter user name.</span>
 
         </span>
 		
@@ -802,7 +962,9 @@ type="radio"
 `````````viii) Async validation function:
 
   asyncForbinddenValidate(control:FormControl):Promise<any> | Observable<any> {
-    	const promise = new Promise<any>((resolve, reject)=>{
+    	
+
+const promise = new Promise<any>((resolve, reject)=>{
       
 		setTimeout(() => {
         
@@ -826,12 +988,16 @@ type="radio"
  
   }
 	How to use : 
-	            'email': new FormControl(null, [Validators.required, Validators.email], this.asyncForbinddenValidate)
+	            'email': new FormControl(null, [Validators.required, 
+
+Validators.email], this.asyncForbinddenValidate)
 
 	In template error message: 
 
 	
-<span *ngIf="signupForm.get('userData.username').errors['nameIsForbidden']">Invalid user name.</span>
+<span *ngIf="signupForm.get('userData.username').errors
+
+['nameIsForbidden']">Invalid user name.</span>
 
 	
 ````````ix) Creating dynamic form control:
@@ -842,24 +1008,88 @@ type="radio"
 	onAddHobby(){
 
 	    	const control = new FormControl(null, Validators.required);
-    				(<FormArray>this.signupForm.get('hobbies')).push(control);
+    		
+
+		(<FormArray>this.signupForm.get('hobbies')).push(control);
   
 	} 
 
 	In template:
-	<button class="btn btn-default" type="button" (click)="onAddHobby()">Add Hobby</button>
+	<button class="btn btn-default" type="button" (click)="onAddHobby()">Add 
+
+Hobby</button>
           
 	<div class="form-group" 
-*ngFor="let hobbyControl of signupForm.get('hobbies').controls; let i=index">
+*ngFor="let hobbyControl of signupForm.get
+
+('hobbies').controls; let i=index">
               
 	<input type="text" class="form-control" [formControlName]="i">
-          		</div>
+          	
+
+	</div>
 
 	While adding fromcontrol in form group
 	this.signupForm = new FormGroup({
   
 		'hobbies': new FormArray([])
 	});
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>> FormBuilder:
+
+this.applicationForm = this.formBuilder.group({
+	name: ['', {validators:[Validator.required]}, updateOn: 'blur']
+	<name-control>: ['<value>', {<validators:[]>}]
+});
+
+>>>> Adding Control Dyanamically:
+
+this.applicationForm.addControl('email', new FormControl('bolo@gmail.com', {
+	validators: [this.emailvalidate.bind(this, '<more_arguments>')],
+	updateOn: 'blur'	
+}))
+
+>>>> Updating validation of control:
+
+this.applicationForm.get('phonenumber').setValidators([
+	Validators.maxLength(13),
+	Validators.minLength(13)
+]);
+
+>>>> Clear validation of control:
+
+this.applicationForm.get('phonenumber').clearValidators();
+
+>>>> Updating Form :
+
+	this.applicationForm.updateValueAndValidity();
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+>>>>>>>>>>> Validation States: <<<<<<<<<<<<<<	
+
+
+1) valid: This property returns true if the element’s contents are valid and false 
+
+otherwise.
+2) invalid: This property returns true if the element’s contents are invalid and 
+
+false otherwise.
+
+3) pristine: This property returns true if the element’s contents have not been 
+
+changed. In its original condition
+4) dirty: This property returns true if the element’s contents have been changed.
+
+5) untouched: This property returns true if the user has not visited the element.
+6) touched: This property returns true if the user has visited the element.
+
+````````````````````````````````````````````````````````````````````````````````
+
+<input type="text" formControlName="name" [ngClass]="{'error': !applicationForm
+
+['name'].pristine && applicationForm['name'].invalid || isSubmited}"
+
 ````````````````````````````````````````````````````````````````````````````````
 FormGroupObject->
 NgForm :
@@ -869,10 +1099,14 @@ dirty:(...)
 disabled:(...)
 enabled:(...)
 errors:(...)
-form:FormGroup {validator: null, asyncValidator: null, _onCollectionChange: �, pristine: true, touched: false, �}
+form:FormGroup {validator: null, asyncValidator: null, _onCollectionChange: ƒ, 
+
+pristine: true, touched: false, …}
 formDirective:(...)
 invalid:(...)
-ngSubmit:EventEmitter {_isScalar: false, observers: Array(1), closed: false, isStopped:false, hasError: false, �}
+ngSubmit:EventEmitter {_isScalar: false, observers: Array(1), closed: false, 
+
+isStopped:false, hasError: false, …}
 path:(...)
 pending:(...)
 pristine:(...)
@@ -1098,7 +1332,9 @@ import { HttpClient } from "@angular/common/http";
 
 Getting data in JSON
 
- this.httpClient.get<Recipe[]>("https://anuglarshopee.firebaseio.com/recipe.json?auth="+ token,{
+ this.httpClient.get<Recipe[]>("https://anuglarshopee.firebaseio.com/recipe.json?
+
+auth="+ token,{
             observe:'body',
             responseType:'json'
         })
@@ -1154,7 +1390,9 @@ o/p:
 HttpEventType
 	this.recipeService.Savedata()
 	.subscribe((response:HttpEvent)=>{
-		console.log(response.type == HttpEventType.Sent/User/Response/DownloadProgress/ResponseHeader/UploadProgress);
+		console.log(response.type == 
+
+HttpEventType.Sent/User/Response/DownloadProgress/ResponseHeader/UploadProgress);
 	})
 
 export declare enum HttpEventType {
@@ -1201,30 +1439,42 @@ export declare enum HttpEventType {
 HttpHeaders
 
 const headers = new HttpHeaders().set('<key>','<value>').append('<key>','<value>')
-this.httpClient.get<Recipe[]>("https://anuglarshopee.firebaseio.com/recipe.json?auth="+ token,{
+this.httpClient.get<Recipe[]>("https://anuglarshopee.firebaseio.com/recipe.json?
+
+auth="+ token,{
             observe:'body',
-            //headers:new HttpHeaders().set('<key>','<value>').append('<key>','<value>')
+            //headers:new HttpHeaders().set('<key>','<value>').append
+
+('<key>','<value>')
 		headers:headers
         })
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Params
 const params = new HttpParams().set('<key>','<value>').append('<key>','<value>') 
-this.httpClient.get<Recipe[]>("https://anuglarshopee.firebaseio.com/recipe.json?auth="+ token,{
+this.httpClient.get<Recipe[]>("https://anuglarshopee.firebaseio.com/recipe.json?
+
+auth="+ token,{
             observe:'body',
-            //params:new HttpParams().set('<key>','<value>').append('<key>','<value>')
+            //params:new HttpParams().set('<key>','<value>').append
+
+('<key>','<value>')
 		params:params
         })
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 HttpRequest
 
-const req = new HttpRequest('PUT','<url>',<data to send>, {reportProgress:true,//params:new HttpParams().set('<key>','<value>').append('<key>','<value>')})
+const req = new HttpRequest('PUT','<url>',<data to send>, 
+
+{reportProgress:true,//params:new HttpParams().set('<key>','<value>').append
+
+('<key>','<value>')})
 
 return 	this.httpClient.request(req);
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Interceptors
+Interceptors: help in modifying url before going to server
 
 __________________________________________________________________________________
 
@@ -1264,7 +1514,9 @@ Keyframes
           
 			 	style({
 					transform: 'translateX(-100px)',
-            					opacity: 0,
+            
+
+					opacity: 0,
 
 			 	        offset: 0
 			
@@ -1273,7 +1525,9 @@ Keyframes
           style({
             
 					transform: 'translateX(-50px)',
-            					opacity: 0.5,
+            	
+
+				opacity: 0.5,
             
 					offset: 0.3
           
@@ -1282,7 +1536,9 @@ Keyframes
 				style({
             
 					transform: 'translateX(-20px)',
-            					opacity: 1,
+            	
+
+				opacity: 1,
             
 					offset: 0.8
           
@@ -1291,7 +1547,9 @@ Keyframes
 				style({
             
 					transform: 'translateX(0px)',
-            					opacity: 1,
+            	
+
+				opacity: 1,
             
 					offset: 1
           
@@ -1317,7 +1575,9 @@ transition('* => void', [
 				style({
             
 					transform: 'translateX(100px)',
-            					opacity: 0
+            	
+
+				opacity: 0
           
 				}))
         
@@ -1327,7 +1587,9 @@ transition('* => void', [
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Dynamic component loading
-https://coryrylan.com/blog/angular-custom-form-controls-with-reactive-forms-and-ngmodel
+https://coryrylan.com/blog/angular-custom-form-controls-with-reactive-forms-and-
+
+ngmodel
 @Component({
   selector: 'app-ad-banner',
   template: `
@@ -1358,7 +1620,9 @@ export class AdBannerComponent implements OnInit, OnDestroy {
     this.currentAdIndex = (this.currentAdIndex + 1) % this.ads.length;
     let adItem = this.ads[this.currentAdIndex];
 
-    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
+    let componentFactory = this.componentFactoryResolver.resolveComponentFactory
+
+(adItem.component);
 
     let viewContainerRef = this.adHost.viewContainerRef;
     viewContainerRef.clear();
@@ -1387,7 +1651,9 @@ Understanding @ViewChildren, @ViewChild, @ContentChildren and @ContentChild
 The elements which are in template of its component are called view children
 
 @ContentChild/@ContentChildren
-The elements which are used between the opening and closing tags of the host element of a given component are called content children **
+The elements which are used between the opening and closing tags of the host 
+
+element of a given component are called content children **
 Example:
 <app-todo>
 	<app-fotter>
@@ -1400,3 +1666,35 @@ template:`
 `
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Change detection
+By default there are two change detection strategy
+@Component({
+	changeDetection: ChangeDetectionStrategy.Default/onPush
+})
+
+Default: on any change
+onPush: on setting new object to property
+
+For handling changedetechtion manually we have ChangeDetectorRef
+
+constructor(private cd : ChangeDetectorRef){}
+
+Avaliable Functions:
+1) cd.markForCheck() : run change detection
+2) cd.detach(): remove change detection
+3) cd.detectChanges() : run once change detection takes place
+4) cd.reattach(): reattach change detection strategy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Router Events:
+this.router.event.subscribe((event)=>{console.log(event);})
+1) NavigationStart: Start 
+2) RoutesRecognized:
+3) GuardsCheckStart:
+4) ChildActivationStart:
+5) ActivationStart:
+6) GuardsCheckEnd:
+7) ResolverStart:
+8) ResolverEnd:
+9) ActivationEnd:
+10) ChildActivationEnd:
+11) NavigationEnd: End
+

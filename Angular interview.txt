@@ -1,0 +1,749 @@
+1. What is change detection and how it works
+Change detection
+By default there are two change detection strategy
+@Component({
+	changeDetection: ChangeDetectionStrategy.Default/onPush
+})
+
+Default: on any change
+onPush: on setting new object to property
+
+For handling changedetechtion manually we have ChangeDetectorRef
+
+constructor(private cd : ChangeDetectorRef){}
+
+Avaliable Functions:
+1) cd.markForCheck() : run change detection
+2) cd.detach(): remove change detection
+3) cd.detectChanges() : run once change detection takes place
+4) cd.reattach(): reattach change detection strategy
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+
+2. What is Zone.js explain it's mechanism
+
+Angular introduced Zone.js to handle change detection. This allows Angular to decide when the UI has to be refreshed.
+
+Here are the basic concepts you should understand:
+Zone
+	Zone is a mechanism for intercepting and keeping track of asynchronous work.
+Tasks
+	For each async operation, Zone.js creates a task. A task is run in one zone.
+NgZone
+	By default, in an Angular app every task runs in the “Angular” Zone, which is called NgZone. There is only one Angular Zone and change detection is triggered exclusively for async operations which run in the NgZone.
+Root Zone/Forks
+	Zone.js zones are hierarchical which means you always start with a top-level Zone — the “root” Zone. New Zones can be created by forking the root Zone. NgZone is also a fork of the root Zone.
+ZoneSpecs
+	When forking a Zone, a new Zone will be created based on a ZoneSpec. A ZoneSpec can just include a name for the new child Zone, or can include various Hook methods which can be used to intercept certain Zone/task events.
+
+NgZone:- 
+
+constructor(private ngZone: NgZone) {
+  this.ngZone.runOutsideAngular(() => {
+    // this will not trigger change detection
+    setInterval(() => doSomething(), 100)
+  });
+}
+
+When using RxJS : patch-
+import ‘zone.js/dist/zone-patch-rxjs’; // polyfill.ts
+
+To Remove zone.js
+
+platformBrowserDynamic()
+    .bootstrapModule(AppModule, {
+        ngZone: 'noop'
+    });
+
+Now to run change detection use ChangeDetectorRef.detectChanges()
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+
+3. Explain all the config files in angular application and it's property (angular.json, tsconfig.json, package.json and....) Mostly all config
+
+Angular.json file:
+
+At top level
+
+{
+	"version": 1,
+  	"newProjectRoot": "projects",
+	"projects":{}
+	"defaultProject": "one"
+}
+
+projects : {
+	<project_name_1>: {},
+	<project_name_2>: {}
+}
+
+<project_name_1>: {
+	"projectType": "application/library",
+	"root": "" / "projects/off-on",
+	"sourceRoot": "src" / "projects/off-on/src",
+	"prefix": "app"/"lib",
+	"architect": {}
+}
+
+"architect": {
+	"build": {},
+	"serve": {},
+	"extract-i18n": {},
+	"test": {},
+	"lint": {},
+	"e2e": {},
+	"server": {}
+}
+
+"build": { 
+	"builder": "@angular-devkit/build-angular:browser",
+	"options": {},
+	"configurations": {}
+}
+
+
+"options": {
+	"outputPath": "dist/browser",
+        "index": "src/index.html",
+        "main": "src/main.ts",
+        "polyfills": "src/polyfills.ts",
+        "tsConfig": "tsconfig.app.json",
+        "aot": false,
+        "preserveSymlinks": true,
+        "assets": [
+          "src/favicon.ico",
+          "src/assets"
+        ],
+        "styles": [
+          "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+          "src/styles.scss"
+        ],
+        "scripts": [
+          "./node_modules/systemjs/dist/system.src.js"
+        ]
+}
+
+"configurations": {
+	"production": {
+		"fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+	},
+	"dev": {},
+	"qa": {},
+	"es5": {}
+}
+
+"serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "<project-name>:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "<project-name>:build:production"
+            }
+            "dev": {
+              "browserTarget": "<project-name>:build:dev"
+            }
+          }
+        },
+
+"test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+**********  "codeCoverage": true,
+	    "sourceMap: true,
+            "karmaConfig": "karma.conf.js",
+
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+
+#### Package.json
+
+{
+  "name": "one",
+  "version": "0.0.0",
+  "scripts": {
+	"ng": "ng",
+	"start": "ng serve",
+	"start:dev": "ng serve",
+	"start:qa": "ng serve -c=qa --port=4202",
+	"build": "ng build",
+	"build-prod": "ng build --prod",
+	"build-test": "ng build -c=dev",
+	"build-model": "ng build -c=qa"
+  },
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {}
+}
+
+#### tsconfig.json
+
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@shared/*": ["src/app/shared/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}
+
+#### main.ts
+
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+});
+
+#### polyfills.ts
+
+// import 'classlist.js';
+// import 'web-animations-js'; 
+
+
+import 'zone.js/dist/zone';  // Included with Angular CLI.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+4. How angular application work in jit compiler and on AOT compiler
+
+Just-in-Time (JIT), compiles your app in the browser at runtime.
+Ahead-of-Time (AOT), compiles your app at build time on the server.
+
+JIT:
+
+Use ng build to build source code into bundles. This includes assets, JS files (modules in the case lazy load and js map, vendor, and polyfill), index.html, and CSS.
+
+ 	The browser will download all assets, including the HTML, CSS, and JavaScript that is needed for the default view.
+	Angular bootstraps the application
+	Angular will go through JIT compilation process for each component in the application. Then the application gets rendered.
+	In JIT, not all the code is converted into machine code initially. Only code that is necessary (used immediately) will be converted into machine code. Then if a method or functionality called and is not in machine code, then that will also be turned into machine code. This reduces the burden on the CPU and makes the app render faster because it only uses what is needed.
+
+files:
+
+index.html: -
+<script src="runtime-es2015.js" type="module"></script>
+<script src="runtime-es5.js" nomodule defer></script>
+<script src="polyfills-es5.js" nomodule defer></script>
+<script src="polyfills-es2015.js" type="module"></script>
+<script src="styles-es2015.js" type="module"></script>
+<script src="styles-es5.js" nomodule defer></script>
+<script src="vendor-es2015.js" type="module"></script>
+<script src="vendor-es5.js" nomodule defer></script>
+<script src="main-es2015.js" type="module"></script>
+<script src="main-es5.js" nomodule defer></script>
+
+
+main-es5.js -> .map
+main-es-2015.js -> .map
+polyfills-es5.js -> .map
+polyfills-es2015.js -> .map
+runtime-es5.js -> .map
+runtime-es2015.js -> .map
+styles-es5.js -> .map
+style-es2015.js -> .map
+vendor-es5.js -> .map
+vendor-es2015.js -> .map
+
+
+
+
+AOT:
+
+Use ng build --prod to build source code bundles which includes assets, JS files (main, vendor, and polyfills), index.html, and CSS. In this step, Angular uses the Angular compiler to build source code and they do it in 3 phases which are code analysis, code generation, and template type checking. In this step, the bundle size will be smaller than bundle size when we build by JIT mode.
+
+	The end-user accesses our web application via the domain. The browser will download all assets the including the HTML, CSS, and JavaScript that is needed for the default view.
+	Angular bootstraps and the application gets rendered.
+
+files:-
+index.html:- 
+<script src="runtime-es2015.cdfb0ddb511f65fdc0a0.js" type="module"></script> 
+<script src="runtime-es5.cdfb0ddb511f65fdc0a0.js" nomodule defer></script>
+<script src="polyfills-es5.0290b245fbcca09184ac.js" nomodule defer></script>
+<script src="polyfills-es2015.ffa9bb4e015925544f91.js" type="module"></script>
+<script src="main-es2015.7748c27908ee18c014aa.js" type="module"></script>
+<script src="main-es5.7748c27908ee18c014aa.js" nomodule defer></script>
+
+
+Note:- script attributes
+
+//type module:-  dividing code and export and import the code.   
+	
+	E.g:- 
+	file: abcd.js
+		export const a="a"; export function d(){ return "d"} 
+	file: xyz.js
+		import { a, d} from './abcd.js';
+
+// nomodule:- dont load module file if not supported
+// defer: load files in parallely and execute one after other
+// async: load files parallely and independently of ther files
+------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Explain build mechanism
+
+------------------------------------------------------------------------------------------------------------------------------------------
+6. Learn important Observable and operators , mostly question would be asked on scenrio what observable or operator can be used
+
+------------------------------------------------------------------------------------------------------------------------------------------
+7. What's is subject and it's different types
+
+A Subject is a special type of Observable which shares a single execution path among observers.
+
+Subject - No initial value or replay behavior. // const sub = new Subject();
+AsyncSubject - Emits latest value to observers upon completion. //sub.complete();
+BehaviorSubject - Requires an initial value and emits its current value (last emitted item) to new subscribers. // const subject = new BehaviorSubject(123);
+ReplaySubject - Emits specified number of last emitted values (a replay) to new subscribers. // const sub = new ReplaySubject(3);
+
+------------------------------------------------------------------------------------------------------------------------------------------
+8. Difference between cold and hot observable
+When the data is produced by the Observable itself, we call it a cold Observable. When the data is produced outside the Observable, we call it a hot Observable.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+9. Explain content projection
+
+<div class="row">
+	<div class="box">
+		<ng-content select="[a]"></ng-content>
+	</div>
+	<div class="box">
+		<ng-content select="b"></ng-content>
+	</div>
+	<div class="box">
+		<ng-content select=".c"></ng-content>
+	</div>
+</div>
+
+@Component({
+  selector: 'app-utility',
+  templateUrl: './utility.component.html',
+  styleUrls: ['./utility.component.css']
+})
+export class UtilityComponent {
+
+}
+________
+	<app-utility>
+		<p #firstP a>	This is my 1st Content Projection into app-utility</p>
+       		<b #bolder>This is 2nd content projected</b>
+         	<p class="c">This is 3rd content projected</p>
+	</app-utility>
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+10. Difference between ng-template, ng-content, ng-container
+
+##### ng-template:
+the ng-template directive represents an Angular template: this means that the content of this tag will contain part of a template, that can be then be composed together with other templates in order to form the final component template.
+
+<div class="lessons-list" *ngIf="lessons else loading"> //// <ng-template [ngIf]="lessons" [ngIfElse]="loading">(*ngIf has been split up)
+  ... 
+</div>
+
+<ng-template #loading>
+    <div>Loading...</div>
+</ng-template>
+
+#### The ng-container directive: without having to create an extra element just for that.
+
+<ng-template #estimateTemplate let-lessonsCounter="estimate">
+    <div> Approximately {{lessonsCounter}} lessons ...</div>
+</ng-template>
+
+<ng-container 
+   *ngTemplateOutlet="estimateTemplate;context:ctx">
+</ng-container>
+
+////in component class
+export class AppComponent {
+
+    totalEstimate = 10;
+    ctx = {estimate: this.totalEstimate};
+  
+}
+
+
+#### The ng-content: getting templates from out side component
+------------------------------------------------------------------------------------------------------------------------------------------
+11. How to add template dynamically in components
+
+`````````````````````````````````````````directive to select dynamic template````````````````````````````````````````
+
+@Directive({ selector: '[ng-loadingspinner-tmp]' })
+export class NgLoadingSpinnerTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+
+`````````````````````````````````````````Component to load dynamic template`````````````````````````````````````````
+import { NgLoadingSpinnerTemplateDirective } from './ng-templates.directive';
+@Component({selector:"ng-select"})
+class MainComponent{
+
+@ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerTemplate: TemplateRef<any>;
+
+}
+
+<ng-container *ngIf="loading">
+        <ng-template #defaultLoadingSpinnerTemplate>
+            <div class="ng-spinner-loader"></div>
+        </ng-template>
+
+        <ng-template
+            [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate">
+        </ng-template>
+    </ng-container>
+
+
+`````````````````````````````````````````Component to load ng-select component`````````````````````````````````````````
+
+
+<ng-select>
+	<ng-template [ng-loadingspinner-tmp]>
+		<img height="15" width="15" [src]="loader.gif"/>
+	</ng-template>
+</ng-select>
+
+*********************************Ends here*****************************************
+Note: - To add data in template
+
+[ngTemplateOutletContext ]="{message: 'This is a partial template'}" or *ngTemplateOutlet="loadingSpinnerTemplate; context:{message: 'This is a partial template'}"
+------------------------------------------------------------------------------------------------------------------------------------------
+12. How to debug angular application in production env
+
+Hiding source map: Generate source maps but do not add the comment to fetch them in your bundle.
+(build js file mapping to source map file:-> //# sourceMappingURL=main-es2015.js.map)
+
+angular.json
+"architect": {
+  "build": {
+    ...
+    "configurations": {
+        ...
+        "sourceMap": {
+  		"hidden": true,
+  		"scripts": true,
+  		"styles": true
+	}
+    }
+  }
+}
+
+IN CICD: need to create job
+"postbuild": "mkdir dist/demo/sourceMaps; mv dist/demo/*.map dist/demo/sourceMaps"
+------------------------------------------------------------------------------------------------------------------------------------------
+13. Performance optimization 
+
+	a) ChangeDetectionStrategy.OnPush
+	b) Detaching the Change Detector -> changeDetectorRef.detach()
+	c) Run outside Angular: ->
+		this.ngZone.runOutsideAngular(() => {
+    			// this will not trigger change detection
+    			setInterval(() => doSomething(), 100)
+  		});
+	d) Use pure pipes: -> cache the input
+	e) Web Workers: -> ng g web-worker webworker
+	f) Use trackBy option for *ngFor directive
+	g) Lazy-Loading
+	h) compress to gzip file
+	i) Unnecessary server usage
+	j) error handling
+	k) Save Your Build from Memory Leak
+	l) Preload& Prefetch
+	m) Removal of Third Party
+		
+
+------------------------------------------------------------------------------------------------------------------------------------------
+14. Measure to reduce the build size
+	use gzip
+
+------------------------------------------------------------------------------------------------------------------------------------------
+15. What's files are created in build and explain each file what it contains
+
+JIT ->
+
+main-es5.js ->
+main-es-2015.js ->
+polyfills-es5.js ->
+polyfills-es2015.js ->
+runtime-es5.js ->
+runtime-es2015.js ->
+styles-es5.js ->
+style-es2015.js ->
+vendor-es5.js -> third party library code
+vendor-es2015.js ->
+
+AOT ->
+
+runtime-es2015.cdfb0ddb511f65fdc0a0.js ->
+runtime-es5.cdfb0ddb511f65fdc0a0.js -> 
+polyfills-es5.0290b245fbcca09184ac.js ->
+polyfills-es2015.ffa9bb4e015925544f91.js ->
+main-es2015.7748c27908ee18c014aa.js -> actual code
+main-es5.7748c27908ee18c014aa.js -> 
+------------------------------------------------------------------------------------------------------------------------------------------
+16. What is viewContainerReference in angular directive
+
+A DOM element (container) where I can put your newly component as a sibling to this element.
+
+The ComponentFactoryResolver service exposes one important method, resolveComponentFactory.
+The resolveComponentFactory() method takes a component and returns a ComponentFactory.
+You can think of ComponentFactory as an object that knows how to create a component.
+ComponentFactory exposes the create() method that will be used by the container ( ViewContainerRef ) internally.
+
+
+
+<div style="background:yellow. border:1px solid black;" #ref></div>
+
+export class AppComponent {
+  @ViewChild('ref', { read: ViewContainerRef }) container: ViewContainerRef;
+
+  constructor(private _componentFactoryResolver: ComponentFactoryResolver) {
+  }
+
+  ngAfterViewInit() {
+    const componentFactory = this._componentFactoryResolver.resolveComponentFactory(MessageComponent);
+    this.container.clear();
+    const componentRef = this.container.createComponent(componentFactory);
+    const myInstance = <MessageComponent>componentRef.instance;
+
+  }
+
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------
+17. Tell some design patterns used in angular and were and how it is used in angular frame work
+
+https://medium.com/better-programming/javascript-design-patterns-25f0faaaa15
+
+------------------------------------------------------------------------------------------------------------------------------------------
+18. How (click)  event works in angular
+
+------------------------------------------------------------------------------------------------------------------------------------------
+19. Explain what is forwardRef in angular
+
+Allows to refer to references which are not yet defined...
+ForwardRef is just a function that captures a class reference into closure and class becomes defined before the function is executed.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+20. How to convert angular application to PWA
+
+ng add @angular/pwa --project *project-name*
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+21. what is ngTemplateOutlet and explain how to create Configurable Components with Template Partial
+
+*ngTemplateOutlet :- Dynamic Template Creation
+
+#### first component:
+<ng-template #customTabButtons>
+    <div class="custom-class">
+        <button class="tab-button" (click)="login()">
+          {{loginText}}
+        </button>
+        <button class="tab-button" (click)="signUp()">
+          {{signUpText}}
+        </button>
+    </div>
+</ng-template>
+<tab-container [headerTemplate]="customTabButtons"></tab-container>      
+export class AppComponent implements OnInit {
+
+}
+view raw10.ts host
+
+#### Second Component : configurable component
+
+@Component({
+    selector: 'tab-container',
+    template: `
+    
+<ng-template #defaultTabButtons>
+    
+    <div class="default-tab-buttons">
+        ...
+    </div>
+    
+</ng-template>
+<ng-container 
+  *ngTemplateOutlet="headerTemplate ? headerTemplate: defaultTabButtons">
+    
+</ng-container>
+... rest of tab container component ...
+`})
+export class TabContainerComponent {
+    @Input()
+    headerTemplate: TemplateRef<any>;
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------
+22) Angular Pseudo-Events:
+
+For individual element:
+	(keyup.enter), (keyup.backspace), (keyup.tab)
+	(keydown.esc)
+	(keyup.shift.f)
+	(keydown.shift.control.z) -> <input (keydown.control.shift.z)='...responds to control+shift+z...' />
+
+	<input (keyup.a.z)='...respond to a+z...' />
+For document: 
+
+@HostListener('document:keydown.control.z') undo(event: KeyboardEvent) {
+ 
+  // responds to control+z
+}
+------------------------------------------------------------------------------------------------------------------------------------------
+
+23) Events in Angular : 4 types
+
+Event Binding: <button (click)="handleClick()">Save</button> / <input (keyup.control.shift.enter)="onCtrlShiftEnter($event)">
+@HostListener: @HostListener('document:keydown.control.z')
+Renderer2: .listen()
+RxJS: .fromEvent()
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+24) Load component dynamically in another component:
+
+*ngComponentOutlet
+
+Example
+@Component({....})
+export class Tab_1Component{}
+
+@Component({....})
+export class Tab_2Component{}
+
+@Component({....})
+export class Tab_3Component{}
+
+
+@Component({....})
+export class MainComponent{
+	dynaCompo: Component; 
+}
+
+HTML: <ng-container *ngComponentOutlet="dynaCompo"></ng-container>
+
+Here if u assign dynaCompo to Tab_1Componet than  Tab_1Componet would be getting loaded in ng-container
+------------------------------------------------------------------------------------------------------------------------------------------
+
+25) Difference between ElementRef, TemplateRef, ViewContainerRef
+
+@ViewChild('element', { read: ElementRef }) element: ElementRef: is simply like document.getElementById('myId'): this.element.nativeElement.textContent
+@ViewChild('element', { read: TemplateRef }) element: TemplateRef<any>: is an embedded template : this.element.elementRef.nativeElement.textContent
+@ViewChild('template', { read: ViewContainerRef }) template: ViewContainerRef: this.element.elementRef.nativeElement.textContent
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+26) Manipulation of DOM using viewContainerRef: 
+
+
+viewContainerRef.createComponent()
+viewContainerRef.createEmbeddedView()
+viewContainerRef.detach()
+viewContainerRef.insert()
+viewContainerRef.remove()
+viewContainerRef.move()
+viewContainerRef.clear()
+		
+------------------------------------------------------------------------------------------------------------------------------------------
+
+27) Update template by using directive as a selector:
+
+@Directive({ selector: '[appMessage]'})
+export class MessageDirective { constructor(public viewContainerRef: ViewContainerRef) { } }
+
+
+export class MsgComponent implements OnInit, AfterViewChecked {
+	@ViewChild('msg', { static: true }) private msgTempRef: TemplateRef<any>
+	@ViewChildren(MessageDirective) private queryList: QueryList<MessageDirective>
+
+  	ngAfterViewChecked() {
+    		this.queryList.forEach(messageDirective =>
+      		messageDirective.viewContainerRef.createEmbeddedView(this.msgTempRef)
+    		);
+  	}
+
+}
+<ng-template #msg>
+    Welcome to you.<br/>
+    Happy learning!
+ </ng-template>
+ <div appMessage> </div> 
+
+------------------------------------------------------------------------------------------------------------------------------------------

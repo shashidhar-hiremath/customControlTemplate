@@ -1,0 +1,378 @@
+1) Promises:-
+
+function checkValue(a, b){
+	return new Promise((rs, rj) => {
+    		if(a-b>0) {
+        		rs('success' + (a-b));
+    		} else {
+        		rj('fail' + (a-b));
+    		}
+	})
+}
+
+checkValue(10, 20).then( x=> console.log(x)).catch( y => console.log(y)): (O/P) -> fail-10
+checkValue(30, 20).then( x=> console.log(x)).catch( y => console.log(y)): (O/P) -> success10
+
+2) async/await:- 
+
+async function pop(a,b) {
+    try {
+        var t = await checkValue(a, b);
+        console.log(t);
+    } catch(ex) {
+         console.log(ex);
+    }
+}
+
+pop(10,20): (O/P) -> fail-10
+pop(30,20): (O/P) -> success10
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3) Rxjs:- Main concepts
+
+	Observable:- Contain stream of data	
+	Observer:- is a consumer of values delivered by an Observable and set of callback functions (next: x=> console.log(x), error: e=>console.log(e), complete: ()=>console.log('completed'))
+	subscriber:- get the data from observable.
+
+	
+	const observable = new Observable(subscriber => {
+  		subscriber.next(1);
+  		subscriber.next(2);
+  		subscriber.next(3);
+  		setTimeout(() => {
+    			subscriber.next(4);
+    			subscriber.complete();
+  		}, 1000);
+	});
+	
+	const observer = {
+  		next: x => console.log('Observer got a next value: ' + x),
+  		error: err => console.error('Observer got an error: ' + err),
+  		complete: () => console.log('Observer got a complete notification')
+	};
+
+	observable.subscribe(observer);
+
+4) interval(1000) : emmits after every 1 sec (o/p:- 1,2,3,......)
+
+5) timer(5000, 1000): similar to interval only start will happens after every 5sec which is first argument.
+	e.g
+	rxjs.timer(2000).subscribe(x => console.log(x)) (o/p): 2  //after 2 seconds
+
+6) of('a', 'b', 'c'): emmits 3 values one by one after subscription
+
+7) from(['a','b', 'c']): similar to 'of' but emmites each value in array as a indivisual stream and also can convert Promise to observable
+	const p = new Promise((res, rej)=> (res('helo'))); var v = rxjs.from(p)
+
+8) toArray(): collect all observable data and then convert it into array
+	e.g: rxjs.interval(1000).pipe(rxjs.operators.take(4), rxjs.operators.toArray()).subscribe(x => console.log(x)):- (o/p) [0, 1, 2, 3]
+
+9) take(4): takes first 4 emitted values
+	e.g: rxjs.interval(1000).pipe(rxjs.operators.take(5), rxjs.operators.toArray()).subscribe(x => console.log(x)):- (o/p) [0, 1, 2, 3, 4]
+
+10) Create Custome observable: Observable.create(observer => {})
+	e.g 
+	rxjs.Observable.create(observer => { 
+    		setTimeout(() => {
+        		observer.complete(000);
+    		}, 1000);
+    		observer.next(200);
+    		observer.error(404);
+	}).subscribe(x => console.log(x))
+
+11) map :- change the stream data 
+	e.g
+	rxjs.interval(100).pipe(rxjs.operators.map(x=>x*2), rxjs.operators.take(10), rxjs.operators.toArray()).subscribe(x=>console.log(x))
+	(o/p): [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+
+12) Pluck: getting only particular data
+	e.g:
+	var t = [{a: 'a1', b: 'b1'},{a: 'a2', b: 'b2'},{a: 'a3', b: 'b3'},{a: 'a4', b: 'b4'} ]
+	rxjs.from(t).pipe(rxjs.operators.pluck('a'),rxjs.operators.toArray()).subscribe(x=>console.log(x))
+	(o/p): ["a1", "a2", "a3", "a4"]
+	For nested : {address: {city: 'mayami', pincode: 1455000}} use:-> pluck('address', 'pincode')
+
+13) Filter: Getting filter data accroding to condition:
+	e.g:
+	var t = [{a: 'a1', b: 'b1'},{a: 'a2', b: 'b2'},{a: 'a3', b: 'b3'},{a: 'a4', b: 'b4'} ]
+	rxjs.from(t).pipe(rxjs.operators.filter(x=> x.a === 'a1'),rxjs.operators.toArray()).subscribe(x=>console.log(x))
+	(o/p): [{a: 'a1', b: 'b1'}]
+
+14) Tap / (do): is just used to make sideeffect that doesnt effect the actual data; any action such as console.log or do any operation that is 
+	required but not to effect our data.
+	e.g:
+	var t = [1,2,3,4,5]
+	rxjs.from(t).pipe(rxjs.operators.tap(),rxjs.operators.toArray()).subscribe(x=>console.log(x));
+	(o/p): [1,2,3.4,5]
+
+15) takeLast(2): take last 2 data
+	e.g
+	var t = [{a: 'a1', b: 'b1'},{a: 'a2', b: 'b2'},{a: 'a3', b: 'b3'},{a: 'a4', b: 'b4'} ]
+	rxjs.from(t).pipe(rxjs.operators.takeLast(2), rxjs.operators.toArray()).subscribe(x=>console.log(x))
+	(o/p): [{a: 'a3', b: 'b3'},{a: 'a4', b: 'b4'} ]
+
+16) takeUntil(<observable>): stream would get cancled after sent <observable> is called
+	e.g
+	var y = new rxjs.Subject();
+	rxjs.interval(1000).pipe(rxjs.operators.takeUntil(y)).subscribe(x=>console.log(x))
+	(o/p): 1...2...3....4 will be getting called until y.next() is called //.... represents value at new line
+	var y = rxjs.operators.timer(50000)
+	rxjs.interval(1000).pipe(rxjs.operators.takeUntil(y)).subscribe(x=>console.log(x))
+	(o/p): 1...2...3....4....5											//.... represents value at new line
+
+17) retry(3): retries the observable data till success will came in 3 chances else will throw error
+	e.g
+	http.get('www.google.com').pipe(retry(3)).subscribe(x=>console.log(x))
+
+18) retryWhen(): takes error observable as a input and apply condition when to retry
+	retryWhen(receives: (errors: Observable) => Observable, the: scheduler): Observable
+	e.g
+	http.get('www.google.com').pipe(retryWhen( err=> err.pipe(delay(3000)))).subscribe(x=>console.log(x))
+	(o/p): here retry happens after every 3 seconds
+
+19) scan((x,y)=>{}, 0): it is similar to reduce in Javascript Array object 
+	first argument is acumilater and second argument is seed from where it should start
+	e.g
+	1) http.get('www.google.com').pipe(retryWhen(err=> err.pipe(delay(3000), scan((x,y)=>{(x>5? throw err: x++), x},0)))).subscribe(x=>console.log(x))
+	(o/p): will retry 5 times every time delay of 3 seconds
+	2) rxjs.interval(100).pipe(rxjs.operators.take(5), rxjs.operators.scan((x,y) => x+y,0), rxjs.operators.toArray()).subscribe(x => console.log(x))
+	(o/p):  [0, 1, 3, 6, 10]
+
+20) delay(5000): delays response from observable with 5 seconds delay e.g: please refer oabove one in scan or retryWhen
+
+21) debonceTime(5000): after 1 request doesnt take any request till 5 seconds
+	e.g
+	var src = document.querySelector('.mat-drawer-inner-container'); //this is a div which is having scroll bar
+	rxjs.fromEvent(src, 'scroll').pipe(rxjs.operators.debounceTime(1000)).subscribe(x=>console.log(x))
+	(o/p): gets event value after 1 second
+
+22) distinctUntilChanged: till the data gets changed it subscription doesnt call
+	e.g
+	var src = document.querySelector('#txt');
+rxjs.fromEvent(src, 'keyup').pipe(rxjs.operators.map(x=>x.target.value), rxjs.operators.debounceTime(1000), rxjs.operators.distinctUntilChanged()).subscribe(x=>console.log(x))
+	(o/p): gets after initial value is changed is distinct between 1 second
+
+23) Conditional oprts:
+	1) defaultIfEmpty: addes deafult value if getting any empty value
+			e.g
+			rxjs.empty().pipe(rxjs.operators.defaultIfEmpty('Hello')).subscribe(x=>console.log(x))
+			(o/p): "Hello"
+
+	2) every: check all values are valid according to condition
+			e.g
+			rxjs.from([2,4,6,8]).pipe(rxjs.operators.every(x=>x%2===0)).subscribe(y=> console.log(y))
+			(o/p): true
+	3) iif: check condtion and then executes first observable if condition is true or else second observable
+			e.g
+			rxjs.from([2,4,6,8,9]).pipe(rxjs.operators.mergeMap(x=> rxjs.iif((z) => x%2===0, rxjs.of('x'), rxjs.of('y'))), rxjs.operators.toArray()).subscribe(y=> console.log(y))
+			(o/p): ["x", "x", "x", "x", "y"]  
+	4) sequenceEqual: compaire sequence 
+			e.g
+			rxjs.from([1,2]).pipe(rxjs.operators.sequenceEqual(rxjs.from([1,2]))).subscribe(x=>console.log(x))
+			(o/p) true
+
+24) Switch: 
+
+	1) switchMap() => get the value of observable and send to another observable, such that this can be used when one observable value
+					dependes on another observable
+			e.g
+			rxjs.from([2,4,6,8,9]).pipe(rxjs.operators.switchMap(x=>(rxjs.of(x)))).subscribe(x=>{console.log(x)})
+			(o/p): 2....4....6....8....9											//.... represents value at new line
+	2) switchMapTo() => change value of observable value
+			e.g
+			rxjs.from([2,4,6,8,9]).pipe(rxjs.operators.switchMapTo(rxjs.of('hello'))).subscribe(x=>{console.log(x)}
+			(o/p) hello....hello....hello....hello....hello							//.... represents value at new line
+	3) switchAll() => gets list of observable and outputs each observable value
+			e.g
+			rxjs.from([rxjs.of(1),rxjs.of(2)]).pipe(rxjs.operators.switchAll(x=>(x))).subscribe(x=>{console.log(x)})
+			(o/p) 1....2															//.... represents value at new line
+
+25) Merg: 
+
+	1) merge: executes as per observable execution time that first executes
+		e.g
+		var t = rxjs.of(1).pipe(rxjs.operators.delay(1000));
+		var v = rxjs.of(2).pipe(rxjs.operators.delay(500));
+		rxjs.of(3).pipe(rxjs.operators.delay(1100), rxjs.operators.merge(t,v)).subscribe(x=>console.log(x));
+		(o/p): 2....1....3
+
+	2) mergeAll: converts all returned observabe according to time that first executs
+		e.g
+		rxjs.of(4,2).pipe(rxjs.operators.map(x => rxjs.of(x).pipe(rxjs.operators.delay(x*1000))), rxjs.operators.mergeAll()).subscribe(x => console.log(x))
+		(o/p) 2....4
+	
+	3) mergeMap: converts all returned observabe according to time that first executs
+		e.g
+		rxjs.of(4,3).pipe(rxjs.operators.mergeMap(x => rxjs.of(x).pipe(rxjs.operators.delay(x*1000)))).subscribe(x => console.log(x))
+		(o/p): 3....4
+
+	4) mergeScan: gets old value
+		e.g
+		const durationElem = document.getElementById('duration');
+
+		// streams
+		const mouseDown$ = fromEvent(document, 'mousedown');
+		const mouseUp$ = fromEvent(document, 'mouseup');
+
+		// accumulate time mouse held down over time
+		mouseDown$.pipe(
+		  mergeScan((acc, curr) => {
+		    return interval(1000).pipe(
+		        //scan((a, _) => ++a, 0),
+		        map((val: any) => acc++),
+		        takeUntil(mouseUp$)
+		      ) 
+		  }, 0)
+		  // output: 1s...2s...3s...4s...
+		).subscribe(val => durationElem.innerHTML = `${val}s`);
+		(o/p): press key will get value (keydown),1,2,3,(keyup),(keydown),4,5,6,(keyup)
+,
+26) Concat:
+
+	1) concat (combine): throw each value in sequence
+		e.g
+		rxjs.concat(rxjs.of(1), rxjs.of(2), rxjs.of(3)).subscribe(x=>{console.log(x)})
+		(o/p): 1....2....3
+
+	2) concatAll (combine): merge observable value
+		e.g
+		rxjs.interval(500).pipe(rxjs.operators.map(x=>rxjs.of(x+10)), rxjs.operators.concatAll(), rxjs.operators.take(5)).subscribe(x=>console.log(x))
+		(o/p): 11....12....13....14....15
+
+	3) concatMap (transform): get observabe data according to sequence  that is present
+		rxjs.of(3000, 1000).pipe(rxjs.operators.concatMap(x=> rxjs.of(x).pipe(rxjs.operators.delay(x)))).subscribe(x => console.log(x))
+		(o/p): 3000....1000
+
+	4) concatMapTo (transform): changes observabel data
+		rxjs.of(rxjs.of(3000), rxjs.of(1000)).pipe(rxjs.operators.concatMapTo(rxjs.of('hello'))).subscribe(x => console.log(x))
+		(o/p): hello....hello
+
+
+27) Error handling:
+
+	1) catchError: catch error and need to throw observable
+		e.g
+		rxjs.throwError('error occured').pipe(rxjs.operators.catchError(x=> rxjs.of('value: ' + x))).subscribe(x => console.log(x))
+		(o/p) "value: error occured"
+
+	2) retry: refer 17
+	3) retryWhen: refer 18
+
+------------------------------------------------ Filtering data ------------------------------------------
+
+28) Debounce: Though not as widely used as debounceTime, debounce is important when the debounce rate is variable!
+	e.g
+
+29) distinct: gives distinct values
+	e.g
+	rxjs.of(1,2,3,4,2,1,4,5,2,1).pipe(rxjs.operators.distinct(), rxjs.operators.toArray()).subscribe(x=> console.log(x))
+	(o/p) [1, 2, 3, 4, 5]
+	rxjs.of({a: 'a1'}, {a: 'a2'}, {a: 'a3'}, {a: 'a1'}, {a: 'a2'}).pipe(rxjs.operators.distinct(x=>x.a), rxjs.operators.toArray()).subscribe(x=> console.log(x))
+	(o/p) [{a: 'a1'}, {a: 'a2'}, {a: 'a3'}]
+
+30) distinctUntilChanged: can compare current and previous value
+	e.g
+	rxjs.of({a: 'a1'}, {a: 'a1'}, {a: 'a2'}, {a: 'a2'}, {a: 'a2'}).pipe(rxjs.operators.distinctUntilChanged((prev, curr)=> prev.a===curr.a), rxjs.operators.toArray()).subscribe(x=> console.log(x))
+	(o/p) [{a: 'a1'}, {a: 'a2'}]
+
+31) distinctUntilKeyChanged: verify according to object particular key specified
+	e.g 
+	rxjs.of({a: 'a1'}, {a: 'a1'}, {a: 'a2'}, {a: 'a2'}, {a: 'a3'}).pipe(rxjs.operators.distinctUntilKeyChanged('a'), rxjs.operators.toArray()).subscribe(x=> console.log(x))
+	(o/p) [{a: 'a1'}, {a: 'a2'}, {a: 'a3'}]
+
+32) filter: refer 13
+
+33) find: similar to Array.find() get first item creteria match
+	e.g
+	rxjs.of({a: 'a1'}, {a: 'a3'}, {a: 'a2', b: 'b2'}).pipe(rxjs.operators.find(x=>x.a==='a2')).subscribe(x=> console.log(x))
+	(o/p): {a: "a2", b: "b2"}
+
+34) first: gets first selected element
+	e.g
+	rxjs.from([1,2,3,4,5]).pipe(rxjs.operators.first(x=>x===2)).subscribe(x=>console.log(x))
+	(o/p): 2
+	rxjs.from([1,2,3,4,5]).pipe(rxjs.operators.first(x=>x>20), 'Nothing').subscribe(x=>console.log(x))
+	(o/p): Nothing
+
+35) last: similar to first but reverse
+
+36) defer: stores data at the time of cresting observable and gives that result while subscription
+	e.g
+	const s1 = of(new Date()); //will capture current date time
+	const s2 = defer(() => of(new Date())); //will capture date time at the moment of subscription
+	console.log(new Date());
+	timer(2000)
+  		.pipe(
+    	switchMap(_ => merge(s1, s2))
+  	).subscribe(console.log);	
+	(o/p): 2020-10-11T12:59:46.466Z....2020-10-11T12:59:46.466Z....2020-10-11T12:59:48.472Z
+
+37) generate: is some what similar to for loop, first argument is value, second argument is condtion and thired is increment
+	e.g
+	rxjs.generate(2, x=> x<10, x=>x+3).subscribe(x=>console.log(x))
+	(o/p): 2....5....8
+
+38) range: throws value in specified range
+	e.g
+	rxjs.range(1,5).pipe(rxjs.operators.toArray()).subscribe(x=>console.log(x))
+	(o/p): [1, 2, 3, 4, 5]
+
+39) throwError: used to throw error with message
+	e.g
+	rxjs.throwError('This is an error!');
+
+
+------------------------------------------------ Combination data ------------------------------------------
+
+40) combineLatest: takes multiple observable and emits value for last observable each value with previous observables last value
+	e.g
+	rxjs.combineLatest(rxjs.of(1,2,3), rxjs.of(4,5,6), rxjs.of(7,8,9)).pipe(rxjs.operators.toArray()).subscribe(x => console.log(x))
+	(o/p) [[3, 6, 7], [3, 6, 8], [3, 6, 9]]
+
+41) combineAll: combines each results of observable
+	e.g
+	rxjs.interval(1000).pipe(rxjs.operators.map(x=> rxjs.interval(1000).pipe(rxjs.operators.take(3))), rxjs.operators.take(2)).pipe(rxjs.operators.combineAll()).subscribe(x=>console.log(x, new Date())); console.log(new Date())
+	(o/p): 
+	[0, 0] Sun Oct 11 2020 19:40:30 GMT+0530 (India Standard Time) 
+	[1, 0] Sun Oct 11 2020 19:40:31 GMT+0530 (India Standard Time) 
+	[1, 1] Sun Oct 11 2020 19:40:31 GMT+0530 (India Standard Time) 
+	[2, 1] Sun Oct 11 2020 19:40:32 GMT+0530 (India Standard Time) 
+	[2, 2] Sun Oct 11 2020 19:40:32 GMT+0530 (India Standard Time)
+
+42) endWith: addes last value.
+	e.g
+	rxjs.of(1,2,3).pipe(rxjs.operators.endWith('end number'), rxjs.operators.toArray()).subscribe(x=>console.log(x))
+	(o/p): [1, 2, 3, "end number"]
+
+43) startWith: addes first value.
+	e.g
+	rxjs.of(1,2,3).pipe(rxjs.operators.endWith('start number'), rxjs.operators.toArray()).subscribe(x=>console.log(x))
+	(o/p): ['start number', 1, 2, 3]
+
+44) pairwise: paires previous and and current value
+	e.g
+	rxjs.of(1,2,3,4).pipe(rxjs.operators.pairwise()).subscribe(x=>console.log(x))
+	(o/p): [1,2]....[2,3]....[3,4]
+
+45) race(): it containes multiple observable, and returns observable value that first returns
+	e.g
+	rxjs.race(rxjs.of('first.').pipe(rxjs.operators.delay(1000)), rxjs.of('second.').pipe(rxjs.operators.delay(2000))).subscribe(x=>console.log(x))
+	(o/p): first.
+
+46) withLatestFrom: get combined result of provided observable and also starts when provided observable emits first value
+	e.g
+	rxjs.interval(500).pipe(rxjs.operators.withLatestFrom(rxjs.interval(2000)), rxjs.operators.take(5)).subscribe(x=>console.log(x))
+	(o/p)
+		[3, 0]
+		[4, 0]
+		[5, 0]
+		[6, 0]
+		[7, 1]
+	
+47) zip: get result of all observable and get result of all at a time
+	e.g
+	rxjs.zip(rxjs.of(1), rxjs.of(2), rxjs.of(3)).subscribe(x=>console.log(x))
+	(o/p): [1, 2, 3]
+
+48) 

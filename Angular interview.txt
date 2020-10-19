@@ -747,3 +747,32 @@ export class MsgComponent implements OnInit, AfterViewChecked {
  <div appMessage> </div> 
 
 ------------------------------------------------------------------------------------------------------------------------------------------
+
+28) create custome *ngFor directive in angular 
+	@Directive({
+  		selector: '[myFor][myForOf]'
+	})
+	export class MyForDirective {
+
+  	@Input()
+  	set myForOf(collection) {
+    		this.view.clear();
+    		collection.forEach((item, index) => {
+      		this.view.createEmbeddedView(this.template, {
+        		$implicit: item,
+        		index
+      		});
+    	});
+  }
+
+  constructor(private view: ViewContainerRef,
+    private template: TemplateRef<any>) { }
+}
+
+use in component template: 
+
+        <ng-template myFor [myForOf]="items" let-item let-i="index">
+          <li>
+            {{ i }} Member: {{ item.name | json }}
+          </li>
+        </ng-template>

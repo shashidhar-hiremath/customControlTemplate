@@ -375,4 +375,69 @@ rxjs.fromEvent(src, 'keyup').pipe(rxjs.operators.map(x=>x.target.value), rxjs.op
 	rxjs.zip(rxjs.of(1), rxjs.of(2), rxjs.of(3)).subscribe(x=>console.log(x))
 	(o/p): [1, 2, 3]
 
-48) 
+48) Forkjoin: used to get result of multiple observbles, if any observable fails than error is thrown and observable hows values were successed will not get.
+	e.g
+	rxjs.forkJoin({
+    		google: rxjs.ajax.ajax.getJSON('https://api.github.com/users/google'),
+    		microsoft: rxjs.ajax.ajax.getJSON('https://api.github.com/users/microsoft'),
+    		users: rxjs.ajax.ajax.getJSON('https://api.github.com/users')
+	}).subscribe(console.log)
+	(o/p): {
+    		google: <api_result>
+    		microsoft: <api_result>,
+    		users: <api_result>
+	}
+	
+	______________________________________Note____________________________________________________
+	Understanding difference between forkjoin, combineLatest, withLatestFrom & zip
+	
+type Color = 'white' | 'green' | 'red' | 'blue';
+type Logo = 'fish' | 'dog' | 'bird' | 'cow';
+
+const color$ = new Subject<Color>();
+const logo$ = new Subject<Logo>();
+
+combineLatest(color$, logo$)
+    .subscribe(([color, logo]) => console.log(`${color} shirt with ${logo}`));
+   (o/p):
+		white shirt with fish
+		green shirt with fish
+		green shirt with dog
+		red shirt with dog
+		red shirt with bird
+		blue shirt with bird 
+
+zip(color$, logo$)
+    .subscribe(([color, logo]) => console.log(`${color} shirt with ${logo}`));
+    (o/p):
+    		white shirt with fish
+		green shirt with dog
+		red shirt with bird
+		
+// the master slave operator	
+color$ // master
+  .pipe(withLatestFrom(logo$) // slave) 
+  .subscribe(([color, logo]) => console.log(`${color} shirt with ${logo}`));
+  (o/p): 
+  		green shirt with fish
+		red shirt with dog
+		blue shirt with bird
+
+forkJoin(color$, logo$)
+    .subscribe(([color, logo]) => console.log(`${color} shirt with ${logo}`));
+    (o/p): will get no output till the selected observable is completed 
+    		// color$.complete();
+	        // logo$.complete();
+		after this (o/p): red shirt with bird
+color$.next('white');
+logo$.next('fish');
+
+color$.next('green');
+logo$.next('dog');
+
+color$.next('red');
+logo$.next('bird');
+
+color$.next('blue');
+	_______________________________________________Note End____________________________________________________
+49)

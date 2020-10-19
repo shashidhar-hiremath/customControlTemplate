@@ -440,4 +440,54 @@ logo$.next('bird');
 
 color$.next('blue');
 	_______________________________________________Note End____________________________________________________
-49)
+	
+49) sample: Sample from source when provided observable emits. when sample is triggered than source value is showed
+	e.g
+		const source = zip(from(['Joe', 'Frank', 'Bob']), interval(2000));
+		const example = source.pipe(sample(interval(2500)));
+		const subscribe = example.subscribe(val => console.log(val));
+	(o/p):  (after 2500) ["Joe", 0]..(after 2500)..["Frank", 1]
+	
+	e.g
+		merge(fromEvent(document, 'mousedown').pipe(mapTo(false)),
+		      fromEvent(document, 'mousemove').pipe(mapTo(true)))
+  		.pipe(sample(fromEvent(document, 'mouseup')))
+		.subscribe(isDragging => {
+    			console.log('Were you dragging?', isDragging);
+  		})
+	(o/p): (click mouse and leave) Were you dragging? false
+	(o/p): (click mouse, drag at another location and leave) Were you dragging? true
+
+
+50) skip: Skip allows you to ignore the first x emissions from the source
+	e.g
+		const numArrayObs = from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+		const skipObs = numArrayObs.pipe(skip(2)).subscribe(console.log);
+	(o/p): 	3,4,5,6,7,8,9,10
+
+51) skipUntil: Skip emitted values from source until provided observable emits. similar to takeUntil
+	e.g
+		const source = interval(1000);
+		source.pipe(skipUntil(timer(6000))).subscribe(val => console.log(val));
+	(o/p)  5...6...7...8....
+
+52) skipWhile: skiping till particular condition passes at first time
+	e.g
+		const source = interval(1000);
+		source.pipe(skipWhile(val => val < 5)).subscribe(val => console.log(val))
+	(o/p)   5...6...7...8....
+
+53) takeWhile: reverse of skpiWhile
+	e.g
+		of(1, 2, 3, 4, 5, 6).pipe(takeWhile(val => val <= 4)).subscribe(val => console.log(val));
+	(o/p)   1,2,3,4
+
+54) throttle: will emits the value after particular interval 
+	e.g:
+		rxjs.interval(1000).pipe(rxjs.operators.take(10),rxjs.operators.throttle(rxjs.interval(2000))).subscribe(console.log)
+	(o/p):  0....3....6....9
+
+55) throttleTime: 
+	e.g 
+		rxjs.interval(1000).pipe(rxjs.operators.take(10), rxjs.operators.throttleTime(2000)).subscribe(console.log)
+	(o/p):  0....3....6....9

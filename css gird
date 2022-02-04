@@ -136,4 +136,9 @@ Css grid : 2 dimentional flow
     |            |              
     --------------
     
-    
+8) justify-content: align items horizontally (values: center, start, end, stretch(default), space-around)
+9) align-content: align items vertically (values: center, start, end, stretch(default), space-around)
+
+10) align-self: vertical align item individualy
+11) justify-self: horizontally align item individualy
+

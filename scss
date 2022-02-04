@@ -1,0 +1,586 @@
+What is a CSS preprocessor?
+A CSS preprocessor is a scripting language that extends CSS by allowing developers 
+
+to write code in one language and then compile it into CSS. Some examples of CSS 
+
+preprocessor include: Sass, Less and Stylus.
+
+
+-------Slide 2-------
+SASS: Syntactically Awesome Style Sheets
+
+Sass (Syntactically Awesome Style Sheets) is an extension of CSS that enables you 
+
+to use things like variables, nested rules, inline imports and more. It also helps 
+
+to keep things organised and allows you to create style sheets faster.
+
+Advantages
+Sass facilitates you to write clean, easy and less CSS in a programming construct.
+It contains fewer codes so you can write CSS quicker.
+It is more stable, powerful, and elegant because it is an extension of CSS. So, it 
+
+is easy for designers and developers to work more efficiently and quickly.
+It is compatible with all versions of CSS. So, you can use any available CSS 
+
+libraries.
+It provides nesting so you can use nested syntax and useful functions like color 
+
+manipulation, math functions and other values.
+--------------
+
+SASS & SCSS
+Two avaliable syntaxes:
+
+--SASS--
+HAML-style indentation (HTML abstraction markup language)
+No brackets or semi-colons, based on indentation
+Less characters to type
+Enforced conventions/neatness
+
+Eg : $font-size: 11px
+$bg-color : #f0f0f
+$link-color: #00f
+
+#main
+font-size: $font-size
+background: $bg-color
+a
+color: $link-color
+
+--SCSS--
+Semi-colon and bracket syntax
+Superse of normal CSS
+Normal CSS is also valid SCSS
+Newer & recommended
+
+Eg : $font-size: 11px;
+$bg-color : #f0f0f;
+$link-color: #00f;
+#main {
+font-size: $font-size;
+background: $bg-color;
+a {
+color: $link-color;
+}
+}
+-------Slide 3-------
+Features 
+Features
+1) Variable
+2) Nesting:
+3) Selector inheritance
+4) Mixins 
+5) Mathematic operations
+6) Control directives (if, if else, for, each, while)
+7) Importing other SASS files
+
+
+-------Slide 4-------
+
+1) Variable :
+The most straightforward way to use SassScript is to use variables. Variables begin 
+
+with dollar signs, and are set like CSS properties:
+
+syntax : $<variable-name>:<variable-value>;
+
+Eg : $bg-color : #f0f0f;
+#main {
+background: $bg-color; 
+}
+Complied CSS file: 
+
+#main {
+background: #f0f0f; 
+}
+
+Data Types
+SassScript supports eight data types:
+i) numbers (e.g. 1.2, 13, 10px)
+ii) strings of text, with and without quotes (e.g. "foo", 'bar', baz)
+iii) colors (e.g. blue, #04a3f9, rgba(255, 0, 0, 0.5))
+iv) booleans (e.g. true, false)
+v) nulls (e.g. null)
+vi) lists of values, separated by spaces or commas (e.g. 1.5em 1em 0 2em, 
+
+Helvetica, Arial, sans-serif)
+vii) maps from one value to another (e.g. (key1: value1, key2: value2))
+viii) function references
+Interpolation : #{}    ?
+
+$pad-lf : padding-left;
+$pad-rg : padding-rg;
+$left : float-left; 
+#main {
+#{$pad-lf} : 20px;
+#{$pad-rg} : 10px; 
+}
+
+.section-#{$left} {
+float: left;
+}
+
+Compiled CSS file: 
+#main {
+padding-left: 20px;
+padding-right: 10px;
+}
+.section-float-left {
+float:left;
+}
+
+-------Slide 5-------
+
+2) Nesting:
+When you begin working with Sass, the first feature you fall in love with is 
+
+"nested selectors". Being able to nest selectors under another is a wonderful 
+
+feature which saves keystrokes. 
+#footer {
+width: 100%;
+.link {
+color: #ccc;
+}
+}
+
+o/p :
+
+#footer {
+width: 100%;
+}
+
+#footer .link {
+color: #ccc;
+}
+
+-------Slide 6-------
+
+3) Selector inheritance (@extend) :This is one of the most useful features of Sass. 
+
+Using @extend lets you share a set of CSS properties from one selector to another. 
+
+.error {
+  border: 1px #f00;
+  background-color: #fdd;
+}
+.seriousError {
+  @extend .error;
+  border-width: 3px;
+}
+
+o/p:
+
+.error, .seriousError {
+  border: 1px #f00;
+  background-color: #fdd;
+}
+
+.seriousError {
+  border-width: 3px;
+}
+
+-------Slide 7-------
+
+4) Mixins:
+Mixins allow you to define styles that can be re-used throughout the stylesheet 
+
+without needing to resort to non-semantic classes like .float-left. Mixins can also 
+
+contain full CSS rules, and anything else allowed elsewhere in a Sass document. 
+
+They can even take arguments which allows you to produce a wide variety of styles 
+
+with 
+
+very few mixins.
+
+Defining a Mixin: @mixin
+Mixins are defined with the @mixin directive. It's followed by the name of the 
+
+mixin and optionally the arguments, and a block containing the contents of the 
+
+mixin. 
+
+For example, the large-text mixin is defined as follows:
+
+@mixin large-text {
+  font: {
+    family: Arial;
+    size: 20px;
+    weight: bold;
+  }
+  color: #ff0000;
+}
+
+Including a Mixin: @include
+Mixins are included in the document with the @include directive. This takes the 
+
+name of a mixin and optionally arguments to pass to it, and includes the styles 
+
+defined 
+
+by that mixin into the current rule. For example:
+
+.page-title {
+  @include large-text;
+  padding: 4px;
+  margin-top: 10px;
+}
+
+is compiled to:
+
+.page-title {
+  font-family: Arial;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff0000;
+  padding: 4px;
+  margin-top: 10px; }
+
+Arguments :
+
+@mixin sexy-border($color, $width) {
+  border: {
+    color: $color;
+    width: $width;
+    style: dashed;
+  }
+}
+
+p { @include sexy-border(blue, 1in); }
+
+is compiled to:
+
+p {
+  border-color: blue;
+  border-width: 1in;
+  border-style: dashed; }
+
+
+Variable Arguments:
+
+@mixin box-shadow($shadows...) {
+  -moz-box-shadow: $shadows;
+  -webkit-box-shadow: $shadows;
+  box-shadow: $shadows;
+}
+
+.shadows {
+  @include box-shadow(0px 4px 5px #666, 2px 6px 10px #999);
+}
+
+is compiled to:
+
+.shadows {
+  -moz-box-shadow: 0px 4px 5px #666, 2px 6px 10px #999;
+  -webkit-box-shadow: 0px 4px 5px #666, 2px 6px 10px #999;
+  box-shadow: 0px 4px 5px #666, 2px 6px 10px #999;
+}
+
+-------Slide 8-------
+
+5) Mathematic operations :
+SassScript supports the standard arithmetic operations on numbers (addition +, 
+
+subtraction -, multiplication *, division /, and modulo %).
+
+.box {
+    padding: 200 / 50 + px;
+    margin: 10 + 5 + px;
+    width: 500 - 100 + px;
+    height: 200 * 1.5 + px;
+
+}
+
+ .container { width: 100%; }
+
+
+article[role="main"] {
+  float: left;
+  width: 600px / 960px * 100%;
+}
+
+aside[role="complementary"] {
+  float: right;
+  width: 300px / 960px * 100%;
+}
+
+
+o/p
+
+.box {
+  padding: 4px;
+  margin: 15px;
+  width: 400px;
+  height: 300px; }
+
+.container {
+  width: 100%; }
+
+
+article[role="main"] {
+
+  float: left;
+
+  width: 62.5%; 
+}
+
+
+aside[role="complementary"] {
+
+  float: right;
+
+  width: 31.25%; 
+}
+
+
+-------Slide 9-------
+
+6) Control directives (if, if else, for, each, while) :
+
+Sass control directives and expressions facilitate you to use styling based on some 
+
+conditions. It also makes you able to apply same style many times with variations. 
+
+These are mainly used in mixin and require considerable flexibility.
+
+i) if() function: The if() function is based on the condition. It returns only one 
+
+result from two possible values.
+
+$font-size: 18;
+
+
+
+input {
+line-height: if($font-size < 14, 14px, 20px);
+}
+
+o/p:
+
+input {
+line-height: 20px; 
+}
+
+ii) @if directive: The @if directive accepts SassScript expressions and uses the 
+
+nested styles whenever the result of the expression is anything other than false or 
+
+null.
+
+$width: 300;
+
+.box {
+@if $width > 200 {
+margin-right: 10px;
+}
+@else {
+margin-right: 15px;
+}
+}
+
+o/p :
+
+.box {
+margin-right: 10px;
+}
+
+iii) @else if directive: The Sass @else-if directive is used when @if directive is 
+
+failed. If it is failed @else directive is used.
+
+$width: 300;
+
+.box {
+@if $width < 300 {
+margin-right: 10px;
+}
+@else if $width == 300 {
+margin-right: 15px;
+}
+@else {
+margin-right: 20px;
+}
+}
+
+.box {
+  margin-right: 15px; }
+
+iv) @for directive with through keyword: The @for directive facilitates you to 
+
+generate styles in a loop.
+
+@for $var from <start> through <end>  
+
+Eg :
+ @for $i from 1 through 4 {  
+  .p#{$i} { padding-left : $i * 10px; }  
+}   
+
+o/p :
+.p1 {
+  padding-left: 10px; }
+
+
+.p2 {
+  padding-left: 20px; }
+
+
+.p3 {
+  padding-left: 30px; }
+
+
+.p4 {
+  padding-left: 40px; }
+
+v) @each directive: A variable is defined within the @each directive which contains 
+
+the value of each item in a list.
+@each $var in <list or map>   
+
+E.g : 
+
+@each $color in pink, violet, yellow, blue {  
+  .p_#{$color} {  
+    background-color: #{$color};  
+  }  
+}  
+
+o/p :
+.p_pink {  
+  background-color: pink; }  
+.p_violet {  
+  background-color: violet; }  
+.p_yellow {  
+  background-color: yellow; }  
+.p_blue {  
+  background-color: blue; }  
+
+vi) @each directive with multiple assignments: We can use Sass @each directive with 
+
+multiple values like $var1, $var2, $var3, ... in .
+
+@each $var1, $var2, $var3 ... in <list>   
+
+Eg : 
+@each $color, $border in (aqua, dotted),  
+                        (red, solid),  
+                        (green, double){  
+  .#{$color} {  
+    background-color : $color;  
+    border: $border;  
+  }  
+}  
+
+o/p : 
+.aqua {  
+  background-color: aqua;  
+  border: dotted; }  
+.red {  
+  background-color: red;  
+  border: solid; }  
+.green {  
+  background-color: green;  
+  border: double; }  
+
+vii) @for directive with to keyword: In Sass @for directive, the "to" keyword is 
+
+used to specify the range form value to the value before value.
+@for $var from <start> to <end>   
+
+Eg: 
+@for $i from 1 to 4 {  
+  .p#{$i} { padding-left : $i * 10px; }  
+}   
+o/p: 
+.p1 {  
+  padding-left: 10px; }  
+.p2 {  
+  padding-left: 20px; }  
+.p3 {  
+  padding-left: 30px; }  
+
+viii) @while directive: It takes SassScript expressions and until the statement 
+
+evaluates to false it iteratively outputs nested styles.
+while(condition) {  
+  // CSS codes  
+}   
+
+Eg: 
+
+$i: 100;  
+@while $i > 0 {  
+  .paddding-#{$i} { padding-left: 1px * $i; }  
+  $i: $i - 20;  
+}   
+
+o/p :
+
+.paddding-100 {  
+  padding-left: 100px; }  
+.paddding-80 {  
+  padding-left: 80px; }  
+.paddding-60 {  
+  padding-left: 60px; }  
+.paddding-40 {  
+  padding-left: 40px; }  
+.paddding-20 {  
+  padding-left: 20px; }  
+
+-------Slide 10-------
+7) SASS Import
+
+CSS provides @import option that makes you able to split your CSS into smaller, 
+
+more maintainable portions. The only one limitation is that each time you use 
+
+@import 
+
+in CSS, it creates another HTTP request.
+
+Sass builds on top of the current CSS @import. It doesn't need to require an HTTP 
+
+request. Instead of this, it simply takes the file that you want to import and 
+
+combine it with the file you're importing into so you can serve a single CSS file 
+
+to the web browser.
+
+Suppose we have two Sass files, _reset.scss and base.scss and we want to import 
+
+_reset.scss into base.scss.
+See this example:
+
+// _reset.scss  
+html,  
+body,  
+ul,  
+ol {  
+   margin: 0;  
+  padding: 0;  
+}  
+
+
+// base.scss  
+@import 'reset';  
+body {  
+  font: 100% Helvetica, sans-serif;  
+  background-color: #efefef;  
+}   
+While importing the file, you don't need to include the file extension ".scss". It 
+
+will generate the following CSS file:
+
+CSS after processing:
+
+ html, body, ul, ol {  
+  margin: 0;  
+  padding: 0;  
+}  
+body {  
+  font: 100% Helvetica, sans-serif;  
+  background-color: #efefef;  
+}  

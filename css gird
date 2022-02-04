@@ -1,3 +1,56 @@
-Css grid 
+Css grid : 2 dimentional flow
+----> horizontal/row
+^
+| Vertical/column
+|
+
 
 1) display: grid
+
+2) grid-template-column: 200px 100px; // first column would be 200px width second would be 100px width
+   grid-template-column: 2fr 1fr; // first column would be double the second column 
+   grid-template-column: repeat(4, 100px); // repeat 4 times & all columns would be 100px
+   
+3) grid-template-row: 200px 100px; // first row would be 200px height and second row 100px
+   
+4) grid-auto-rows: 150px; // all rows will be 150px height
+   grid-auto-rows: minmax(150px, auto) // minimum 150px height and max infinite
+   
+5) Gap:
+   grid-row-gap: 15px; // gap between rows
+   grid-column-gap: 20px; // gap between columns
+   grid-gap: 10px; // similar gap on rows and columns
+   
+6) Area:
+   grid-template-areas: "header header"
+                        "sidebar content"
+                        "sidebar content"
+                    
+   .grid-item-1 { 
+      grid-area: header;
+    }
+    
+   .grid-item-2 { 
+      grid-area: sidebar;
+    }
+    
+    .grid-item-3 { 
+      grid-area: content;
+    }
+    This will create below UI
+    -----------------------------
+    |                           |
+    |          header           |
+    -----------------------------
+    -----------------------------
+    |            |              |
+    | sidebar    |              |
+    |            | content      |
+    |            |              |
+    -----------------------------
+    -----------------------------
+    |            |              |
+    |            |              |
+    -----------------------------
+    
+

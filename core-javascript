@@ -1,0 +1,455 @@
+Java script is synchronous single threaded language
+Lossely typed language
+
+1) Evert thing happens in java script is in "Execution Context"
+
+Execution Context has 2 component:
+-----------------------------------------------------------------
+Memory / variable env           | code / thread of execution	|
+-----------------------------------------------------------------
+This is were every variable	| every line of code executed	|
+and function is stored as       |				|
+key value pair                 	| one command at a time in a	|
+                 		| paticular sequence		|
+                 		|				|
+                 		|				|
+                 		|				|
+-----------------------------------------------------------------
+
+2) Execution context is create in two phases
+	1) Memory creation (phase 1): javascript allocates memory space for global variable and functions
+		when is varibale: its stores undefined
+		in function: it stores whole code of function
+
+	2) Code execution (phase 2):
+
+	var n = 2;
+	function square(num){
+		var ans = num * num;
+		return ans;
+	}
+	var square2 = square(n);
+	var square3 = square(4); 
+
+		    Global excution context
+-----------------------------------------------------------------
+Memory / phase 1                | code / phase 2		|
+-----------------------------------------------------------------
+ n: undefined			| 	value assigned to n=2	|
+ square: {...}			| square2(n) called		|
+ square2: undefined		| Local execution context 	|
+ square3: undefined		|-------------------------------|
+ 			        |memory 	|code		|
+ 		                |-------------------------------|
+                 		| num:undefined	| num = 2	|
+                 		| ans:undefined | ans= num*num	|
+                 		|		| ans = 4	|
+                 		|-------------------------------|
+                 		|square2 = 4			|
+                 		|				|
+                     		ABOVE EXECUTION CONTEXT IS DELETED
+ 				| square3(4) called		|
+				| Local execution context 	|
+ 				|-------------------------------|
+ 			        |memory 	|code		|
+ 		                |-------------------------------|
+                 		| num:undefined	| num = 4	|
+                 		| ans:undefined | ans= num*num	|
+                 		|		| ans = 16	|
+                 		|-------------------------------|
+                 		|square3 = 16			|
+                 		|				|
+                 		|				|
+                 		|				|
+                 		|				|
+-----------------------------------------------------------------
+
+   All managed by "call stack"
+	---------
+	|local 2|
+	|Executn|
+	|cntxt	| pop out 1
+	|-------|
+	|local 1| pop out 2
+	|Executn|
+	|cntxt	|
+	---------
+	|Global	| pop out last 
+	|Executn|
+	|cntxt	|
+	---------
+
+3) Hoisting:
+	Hoisting is a phinomenan in javascript were we can access variable and function before initialized it with out any error.
+
+	var x = 10;
+	function getName() { console.log('Power javascript') }
+	> Global
+	  |
+	  | getName: f getName(){...}
+	  |
+	  | x: undefined
+	  |	
+	
+4) Code execution
+
+	var x = 1;
+	function a() {
+		var x = 10;
+		console.log(x);
+	}
+	function b() {
+		var x = 100;
+		console.log(x);
+	}
+	a();
+	b();
+	console.log(x);
+	o/p:
+		10
+		100
+		1
+	First value is verified in local execution context and then moved to above or global execution context
+
+	> Local (inside function scope)
+	  | this: windows
+	  | x: undeined (under the function a & b)	
+	  |
+	> Global
+	  |
+	  | a: f a(){...}
+	  | b: f b(){...}
+	  |
+	  | x: undefined
+	  |
+
+5) Empty js file:
+	will create global execution context
+	allocate memory
+	javascrip engine creates window object & this object (which point to window)
+
+	Global space: any varibale or function not inside function is global space
+
+6) undefined & not defined:
+	undefined: memory allocated but not initilaized
+	not defined: variable is not created
+
+	console.log(x) // undefined
+	console.log(a) // Error not defined
+	var x = 10;
+
+	undefined: is a place holder until variable is assigned some value.
+
+7) Scope:
+	Scope in javascript is directly related lexical environment
+	Lexical environment is its local memory along with its lexical environmet of parent.
+	Lexical means in herachy or sequence
+
+	function a() {
+		var x = 10;
+		function c() { // c function lexically setting in a function
+				// in the memory c will have reference to its parent scope
+		}
+	}
+
+	---------
+	|fun c() |
+	|c memory|
+	|{*****} | reference to function a scope / lexical environment of a
+	|--------|
+	|fun a() | 
+	|a memory|
+	|{*****} | reference to Global scope / lexical environment of global
+	----------
+	|Global	 | 
+	|memory  |
+	|{*****} | reference to null
+	---------
+
+	For lexical environment of global parent is null
+
+	Scope Chain: linking of all the lexical environment and its parent references
+	
+	When we are in c function
+	> Local (inside c function scope)
+	  | 
+	  | this: window	
+	  |
+	> Closure (inside a function scope)
+	  | 
+	  | x: 10
+	  | c: f c() {...}
+	  | this: window
+	  |
+	> Global
+	  |
+	  | a: f a(){...}
+	  |
+
+8) let and const: (TEMPORARY DEAD ZONE: is the time till let variable was hoisted and and initialized a value)
+	let and const are hoisted but in temporary dead zone for the time been
+	
+	console.log(a); // Error ReferenceError: Cannot access 'a' before initilization
+	console.log(x); // Error ReferenceError: x is not defined
+	let a = 10;
+	console.log(a);
+	var b = 20;
+	let a = 15; // Error SyntaxError: Identifier 'a' has already been declared 
+	const c; // Error SyntaxError: Missing initializer in const declaration
+	const c = 15;
+	c = 10; // Error TypeError: Assignment to constant variable 
+	
+	> Script 
+	  | 
+	  | a: 10
+	  | c: 15
+	  |
+	> Global
+	  |
+	  | b: 20
+	  |
+
+	Error types: ReferenceError, SyntaxError & TypeError
+
+9) Block scope: is also known as compound statment (group multiple statments in a block)
+	if(true) // Error SyntaxError: unexpected end of input
+	if(true) true; // valid with one statement
+
+	group of statements 
+	{
+		// add muliple statements
+	}
+
+	{
+		var a = 10;
+		let b = 20;
+		const c = 30; 	
+	}
+	console.log(b): // Error ReferenceError: b is not defined
+
+	> Block 
+	  | 
+	  | b: 20
+	  | c: 30
+	  |
+	> Global
+	  |
+	  | a: 10
+	  |
+
+	Shadowing: 
+		var a = 10;
+		{
+			var a = 100;
+			console.log(a); 
+		}
+		console.log(a);
+		o/p: 
+			100
+			100 // refering same memory space
+		--------------------------------------------
+		let b = 10;
+		{
+			var b = 100;
+			console.log(a); 
+		}
+		console.log(a);
+		o/p: 
+			100
+			10
+	Illegal Shadowing:
+		let a = 10;
+		{
+			var a = 10; // Error SyntaxError: 'a' aready declared
+		}
+
+10) Closures: A function binds together with its lexical environment
+	Function along with its lexical scope bundle
+
+	function x() {
+		var a = 10;
+		function y() {
+			console.log(a);
+		}
+		return y; // when is y was returned than function with its lexical scope was returned 
+	}
+	var z = x();
+	z();
+	o/p: 10
+
+	-----------------------------------------------
+	function z() {
+		var b = 100;
+		function x() {
+			var a = 10;
+			function y() {
+				console.log(a, b);
+			}
+			y(); // when is y was returned than function with its lexical scope was returned 
+		}
+		x();
+	}
+	z();
+
+	> Closure (x)
+	  | 
+	  | a: 10
+	  |
+	> Closure (z)
+	  | 
+	  | b: 100
+	  |
+	> Global
+	  |
+	  | z: f z(){...}
+	  |
+
+11) Clouser Advantages:
+	Modularization and encapsulation
+
+	function counter() {
+		var count = 0;
+		return function increment() {
+			count++;
+			console.log(count);
+		}
+	}
+
+	var counter1 = counter();
+	counter1();
+	counter1();
+	var counter2 = counter();
+	counter2();
+	// o/p:
+		1
+		2
+		1
+
+	Better way
+	function Counter() {
+		var count = 0;
+		this.increment = function() {
+			count++;
+			console.log(count);
+		}
+		this.decrement = function() {
+			count--;
+			console.log(count);
+		}
+	}
+	
+	var counter1 = new Counter();
+	counter1.increment();
+	counter1.decrement();
+
+	Disadvantages:
+		Over consumtion of memory
+		not garbage collected
+		memory leak
+	
+	Garbag Collector: free the memory once its out of scope and unused
+	
+	Relation between Clouser and Garbage collector:
+	
+		function a() {
+			var x = 10;
+			return function b() {
+				console.log(x);
+			}
+		}
+
+		var y = a();
+	Smartly garbag collect: 
+		function a() {
+			var x = 10, z = 21;
+			return function b() {
+				console.log(x);
+			}
+		}
+		
+		// z will be no longer in the memory
+
+12) What is Anonymous function?
+    What are higher order functions?
+    What are first class functions?
+
+	Function statement: function created with function key word
+		function a() { console.log ('a called'); }
+
+	Function expression: 
+		var b = function () {}
+		
+		*Difference statement & expression : HOISTING
+		*if we all b() before it is declared it will throw error "TypeError: b is not a function"
+
+	Function declaration:
+		are same as function statment
+
+	Anonymous function: function without name
+		function () {} // SyntaxError: function statment reqires name
+		anonymous function are used when functions are used as values
+	
+	Named funcion expression:
+		 var b = function xyz() {}
+		xyz() // RefreneceError: xyz is not defined
+
+	Difference between Parameters & Arguments:
+		var b = function (param1, param2) {}
+		// values passed to function are arguments below 1 & 2
+		b(1, 2)  
+
+	First class funcions: The abilty of function to be used as value and can be passed as argument to another function and can be returned from the function is 			      known as first call function;
+		function can be passed as arguments to a function
+		Function that accepts or return a function is called a first class function   
+
+	Arrow functions: 
+		() => {}
+	
+
+13) Callback function: 
+	What is callback function
+
+	Javascript is synchronous and single-threaded language
+
+	Blocking main thread
+
+	Power of callback
+
+	Event listeners
+
+	Closures Demo with event listeners
+
+	Scope demo with event listeners
+	
+	Garbage collection & removeEventListners
+
+	
+14) Event loop:
+
+ Call stack
+ ------	
+ |    |	When a program runs
+ |    |
+ |----|	1) We have Call stack in which,
+ | L  |	2) Global execution context is created
+ | E  |	3) After function get executed
+ |----|	4) Local exceution context is ppoped
+ | G  |	5) After all local execution context get poped from call stack
+ | C  |	6) Global execution get poped out from call stack
+ ------	
+
+--------------------------------------------------------------------------------------------------------
+ Call stack												|
+------						Web api/event Table					|
+|    |						------------------------				|
+|    |						|settimeout/fetch	|All browser apis		|
+|----|						|dom/domevent		|				|
+|Locl|						|location/etc		|				|
+| EC |		 Callback Queue			|----------------------	|				|
+|----|	 -----	 ------------------------	|   All CALLBACK	|registration of callback	|
+|Glob|->|Event|->| fun	|	|	|<------|   fun cb()		|				|
+| EC |<-|loop |<-| cb()	|	|	|	-------------------------				|
+------	 -----	 |	|	|	|								|
+	continu	 ------------------------								|
+	monitor												|
+--------------------------------------------------------------------------------------------------------

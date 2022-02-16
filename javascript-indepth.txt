@@ -452,13 +452,13 @@ Memory / phase 1                | code / phase 2		|
 |    |	|microtask queue all promises |		|settimeout/fetch	|All browser apis		|
 |----|	--------------------------------	|dom/domevent		|				|
 |Locl|	  ^ |  hight prorit than queue		|location/etc		|				|
-| EC |	  | |	 Callback Queue			|----------------------	|				|
+| EC |	  | |	 				|----------------------	|				|
 |----|	 -----	 ------------------------	|   All CALLBACK	|registration of callback	|
 |Glob|->|Event|->| fun	|	|	|<------|   fun cb()		|				|
 | EC |<-|loop |<-| cb()	|	|	|	-------------------------				|
 ------	 -----	 |	|	|	|								|
 	continu	 ------------------------								|
-	monitor												|
+	monitor	     Callback Queue									|
 --------------------------------------------------------------------------------------------------------
 
 15) Javascript Engine: 
@@ -504,4 +504,43 @@ Memory / phase 1                | code / phase 2		|
 	
 	function y(a) { a(); console.log('higher order fun')}
 
-18) Array: 
+18) Array:
+	 
+	filter, map, reduce, rightReduce, forEach, push, pop, shift, unshif, some, every, at, findIndex
+	
+	fill(), indexOf, join, reverse, sort, concat, lastIndexOf, find, entries(), copyWithIn, findLast
+
+	var arr = [1,2,3,4,5,6,7];
+	entires() =>
+		var y = arr.entires(); y.next() // {value:[0,1],done:false}
+	slice(?start, ?end) =>
+		arr.slice(2, 5) // [3,4,5], arr.slice(-2) // [6,7]
+	splice(start, ?deleteCount, ...items) => 
+		arr.splice(1) // removed: [2,3,4,5,6,7], now in arry only [1] is remaining
+		arr.splice(1,3) // removed [2, 3, 4], now in arry only [1, 5, 6, 7] is remaining
+		arr.splice(1, 0, 11,12) // add 11 & 12 into array [1,11,12,2,3,4,5,6,7]
+		arr.splice(1,1) // remove 1 index element
+
+	 arr = [{a:1, b:2}, {a:1, b:3}, {a:4, b:6}, {a:8, b:6}]
+	
+	sort => Actual sorting happens
+		arr.sort((x,y) => x.a > y.a ? 1 : -1) // a in ascending order, [{a:1, b:2}, {a:1, b:3}, {a:4, b:6}, {a:8, b:6}]
+		arr.sort((x,y) => x.a < y.a ? 1 : -1) // a in decending order, [{a:8, b:6}, {a:4, b:6}, {a:1, b:3}, {a:1, b:2}]
+	findIndex =>
+		arr.findIndex((y) => y.a === 8 && y.b === 6) // 3
+
+19) String:
+
+	at, charAt, charCodeAt, codePointAt, concat, endsWith, includes, indexOf, lastIndexOf, .length, match, matchAll
+	
+	padEnd, padStart
+	
+	var y = "abcdefgh"
+	charCodeAt => similar codePointAt
+		charCodeAt(2) // 99 (c assci value)
+	endsWith(searchStr, ?endPosition) =>
+		y.endsWith('8', 7) // true
+	padEnd(maxCount, replaceString) =>
+		y.padEnd(10, '#') // 'abcdefgh##'
+	padStart(maxCount, replaceString) =>
+		y.padStart(10, '#') // '##abcdefgh'

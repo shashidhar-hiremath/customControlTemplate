@@ -608,3 +608,209 @@ Memory / phase 1                | code / phase 2		|
 		Math.random() // 0.73083173171301
 	
 	Math.floor(Math.random() * 6) + 5 // random number between 5 to 10
+
+21) Number: 
+	
+	isFinite, isInteger, isNaN, toFixed, toLocaleString, toPrecision, toString, round
+	
+	toFixed() =>
+		let num = 5.56789;
+		num.toFixed(2);
+		o/p: '5.57'
+	toLocaleString => 
+		let num = 1000000;
+		num.toLocaleString("en-US", {style:"currency", currency:"USD"});
+		o/p: '$1,000,000.00'
+		num.toLocaleString("en-US", {style:"currency", currency:"INR"});
+		o/p: '₹1,000,000.00'
+	toPrecision() => 
+		let num = 13.3714;
+		num.toPrecision(2) // 13
+		num.toPrecision(3) // 13.3
+	toString(radix) => convert to different base
+		let num = 15;
+		num.toString(2); // '1111'
+		num.toString(3); // '120'
+		num.toString(8); // '17'
+		num.toString(10); // '15'
+	round() => round figure
+		Math.round(1.46) // 1
+		Math.round(1.5)	// 2
+
+	let h = '1.2'
+	parseInt(h) // 1
+	parseFloat(h) // 1.2
+	
+	123e5; // 12300000
+	123e-5; // 0.00123
+
+22) Date: 
+	var d = new Date() // 02/16/2022
+	d.getDate() // 16
+	d.getDay() // 3 (Wednesday) (0-6)
+	d.getMonth() // 1 (0-11)
+	d.getFullYear() // 2022
+	d.getTime() // <milliseconds>
+
+	Getting difference between two dates:
+		var date1 = new Date("06/30/2019");
+		var date2 = new Date("07/30/2019");
+		var Difference_In_Time = date2.getTime() - date1.getTime();
+		var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);	
+
+	Date.now() // get time in milli seconds from 1970/1/1
+
+23) Regular expression:
+
+	Modifiers: g,i,m
+	Groups: [abc], [^abc], [0-9], [^0-9], (x|y)
+	Metacharacters: . , \w, \W, \d, \D, \s, \S, \b, \B, \0
+	Quantifiers: +, *, ?, {X}, {X,Y}, {X,}, $, ^, ?=, ?!
+	
+	?= => followedby
+		let text = "Is this all there is";
+		let pattern = /is(?= all)/;
+		console.log(text.match(pattern));
+		o/p: is
+	?! => not followedby
+		let text = "Is this all there is";
+		let pattern = /is(?! all)/gi;
+		console.log(text.match(pattern));
+		o/p: Is, is
+	
+	let text = "1, 100 or 1000?";
+	let pattern = /10?/g;
+	console.log(text.match(pattern));
+	o/p: 1,10,10
+
+24) JS statments:
+
+	for...in: get key of object 
+		var b = new Array(7).fill().map((j,i)=>i+3)
+		for(let a in b) { console.log(a) }
+		o/p: 0..1..2..3..4..5..6
+		
+	for...of: get value of object 
+		var b = new Array(7).fill().map((j,i)=>i+3)
+		for(let a of b) { console.log(a) }
+		o/p: 3..4..5..6..7..8..9
+	
+	continue:
+
+	let text = "";
+	// The first for loop is labeled Loop1:
+	Loop1:
+	for (let i = 0; i < 3; i++) {
+  		text += i + "<br>";
+
+		// The second for loop is labeled Loop2:
+		Loop2:
+  		for (let i = 10; i < 15; i++) {
+    			if (i === 12) continue Loop1;
+    			text += i + "<br>";
+  		}
+	}
+
+	o/p: '0<br>10<br>11<br>1<br>10<br>11<br>2<br>10<br>11<br>'
+	
+25) Object: 
+
+	var f = {a: 1, b: 2, c: 3, d: 4}
+	
+	Object.assign: used to create shadow copy
+		Object.assign({},f)
+
+	Object.defineProperties():
+		Syntax:
+		Object.defineProperties(obj, props)
+		example:
+		Object.defineProperties(object1, {
+  
+					property1: 
+						{
+    
+							value: 42,
+    
+							writable: true
+  
+						},
+  
+					property2: {}
+					
+					}
+				);
+		configurable, enumerable, value, writable, get, set
+
+	Object.defineProperty()
+		Object.defineProperty(obj, prop, descriptor)
+	
+		Object.defineProperty(object1, 'property1', {
+  			value: 42,
+  			writable: false
+		});
+
+	Object.entries() => Gell all properties and values
+		Object.entries(f)
+		 [['a', 1], ['b', 2], ['c', 3], ['d', 4]]
+	
+	Object.freeze() => freeze values and extension of object, not able to change any thing
+
+	Object.isFrozen()
+
+	Object.getOwnPropertyDescriptor() :
+	
+		const descriptor1 = Object.getOwnPropertyDescriptor(object1, 'property1');
+		Object.getOwnPropertyDescriptor(f,'a')
+		o/p: {value: 1, writable: false, enumerable: true, configurable: false}
+
+  	Object.getOwnPropertyDescriptors():
+		const descriptors1 = Object.getOwnPropertyDescriptors(object1);
+		Object.getOwnPropertyDescriptors(f);
+		o/p: 
+		a: {value: 1, writable: false, enumerable: true, configurable: false}
+		b: {value: 2, writable: false, enumerable: true, configurable: false}
+		c: {value: 3, writable: false, enumerable: true, configurable: false}
+		d: {value: 4, writable: false, enumerable: true, configurable: false}
+	
+	Object.getOwnPropertyNames()
+		console.log(Object.getOwnPropertyNames(object1));
+		Object.getOwnPropertyNames(f)
+		o/p:  ['a', 'b', 'c', 'd']
+
+	Object.keys(): similar to above one 
+
+	Object.preventExtensions(): prevents adding new properties in object at root level
+
+ 	Object.isExtensible(): 
+
+ 	Object.seal():preventing new properties from being added 
+
+ 	Object.isSealed()
+
+ 	Object.values()
+		const object1 = {
+  			a: 'somestring',
+  			b: 42,
+  			c: false
+		};
+	console.log(Object.values(object1));
+	// expected output: Array ["somestring", 42, false]
+
+	obj.hasOwnProperty(prop)
+		o.hasOwnProperty('propOne');
+		j.hasOwnProperty('a') // true
+		j.hasOwnProperty('z') // false
+
+	Object.is(Obj1, Obj2);
+
+	-----------------------------------------------------------------
+	|			  |Create Prop 	|Read	|Update	|Delete	|
+	|-------------------------|-------------|-------|-------|-------|
+	|Object.freeze		  |	X	|  Y	|  X	|  X	|
+	|-------------------------|-------------|-------|-------|-------|
+	|Object.seal		  |	X	|  Y	|  Y	|  X	|
+	|-------------------------|-------------|-------|-------|-------|
+	|Object.preventExtensions |	X	|  Y	|  Y	|  Y	|
+	-----------------------------------------------------------------
+
+			

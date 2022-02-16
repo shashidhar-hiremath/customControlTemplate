@@ -813,14 +813,56 @@ Memory / phase 1                | code / phase 2		|
 	|Object.preventExtensions |	X	|  Y	|  Y	|  Y	|
 	-----------------------------------------------------------------
 
-26) BOM & DOM :
+26) Promise:
+	Perfomr aync operation , to remove callback hell
+		const myPromise = new Promise((resolve, reject) => {  
+    			let condition;  
+    
+    			if(condition is met) {    
+        			resolve('Promise is resolved successfully.');  
+    			} else {    
+        			reject('Promise is rejected');  
+    			}
+		});
+
+		myPromise.then((message) => { 
+    			console.log(message);
+		}).catch((message) => { 
+    			console.log(message);
+		})
+		.finally(() => { ... });
+
+	Promise.all: Promise.all is actually a promise that takes an array of promises as an input (an iterable). Then it gets resolved when all the promises get 			resolved or any one of them gets rejected.
+
+		Promise.all([Promise1, Promise2, Promise3])
+ 			.then(result) => {
+   				console.log(result)
+ 			})
+ 			.catch(error => console.log(`Error in promises ${error}`));
+
+	Promise.race: The Promise.race() static method accepts a list of promises as an iterable object and returns a new promise that fulfills or rejects as soon as 			there is one promise that fulfills or rejects, with the value or reason from that promise.
+
+		Promise.race([p1, p2])
+    			.then(value => console.log(`Resolved: ${value}`))
+    			.catch(reason => console.log(`Rejected: ${reason}`));
+
+	Async & Await:
+		async function foo() {
+			try {
+				const val = await new Promise();
+			} catch(err) {
+				console.log(err)
+			}
+		}
+
+27) BOM & DOM :
 	The BOM (Browser Object Model) consists of the objects navigator, history, screen, location and document which are children of window. In the document node is the DOM (Document Object Model), the document object model, which represents the contents of the page. You can manipulate it using javascript.	
 
-27) online offline:
+28) online offline:
 		window.addEventListener('offline', () => {alert('gela')})
 		window.addEventListener('online', () => {alert('aala')})
 
-28) navigator Object:
+29) navigator Object:
 	
 	appCodeName: "Mozilla"
 	appName: "Netscape"

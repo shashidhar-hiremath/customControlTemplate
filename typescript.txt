@@ -1,0 +1,89 @@
+Refer: https://rmolinamir.github.io/typescript-cheatsheet/#table-of-contents
+
+1) Primitive & non-Primitive: 
+  Primitive: number, string, boolean, symbol, null, or undefined.
+  non-Primitive: other than all above e.g Object
+  
+2) Types:  
+  String:
+    const myName: string = 'Robert';
+    
+  Number:
+    const myAge: number = 24;
+    
+  Boolean:
+    const bHasHobbies: boolean = true;
+    
+  Array: 
+    const hobbies: string[] = ['Programming', 'Cooking'];
+    
+  Tuples: Tuple types allow you to express an array where the type of a fixed number of elements is known, but need not be the same
+    const address: [string, number] = ["Street", 99];
+    
+  Any:
+    let myCar: any = 'BMW';
+    
+  Enums:
+      enum Color {
+        Gray, // 0
+        Red, // 1
+        Green = 100, // 100
+        Blue, // 101
+        Yellow = 2 // 2
+      }
+      const myColor: Color = Color.Green
+      console.log(myColor); // Prints: 100
+      
+  Functions:
+      function returnMyName(myName): string {
+        return myName;
+      }
+      Argument types.:
+        function multiply(value1: number, value2: number) {
+          return value1 * value2;
+        }
+      Function types.:
+        const myMultiply: (val1: number, val2: number) => number;
+        
+  Objects:
+    let userData: { name: string, age: number }
+    
+  Complex Objects:
+    let complex: { data: number[], output: (all: boolean) => number[] }
+    
+  Optional object properties:
+    const right: { name: string, age?: number }
+    
+  Alias:
+    type Complex = { data: number[], output: (all: boolean) => number[] };
+    
+  Union:
+    let myRealRealAge: number | string = 24;
+    
+  Intersection:
+    interface Loggable {
+      log(name: string, age: number): void
+    }
+    interface Person {
+      name: string
+      age: number
+      isStark?: boolean // May be undefined.
+    }
+    type LoggablePerson = Loggable & Person;
+    
+  Check:
+    let finalValue = 'A string';
+    if (typeof finalValue == 'string') {
+      console.log('finalValue is a string');
+    }
+    
+  Nullable:
+     let canBeNull: null
+     
+  Never: The never type represents the type of values that never occur. 
+    function neverReturns(): never {
+      throw new Error('An error!');
+    }
+
+3) Type Assertions:
+    

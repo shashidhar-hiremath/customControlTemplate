@@ -86,4 +86,114 @@ Refer: https://rmolinamir.github.io/typescript-cheatsheet/#table-of-contents
     }
 
 3) Type Assertions:
+    const someValue: any = "this is a string";
+    const strLength: number = (<string>someValue).length;
+                        OR
+    const strLength: number = (someValue as string).length;
+
+4) ES6:
+    Template Literals: 
+      const userName = 'Robert';
+      const greeting = `Hello I'm ${userName}`;
+      
+    Arrow Functions: 
+      const greet = (name: string = 'Robert') => console.log(`Hello, ${name}`);
+     
+    Default Parameters:
+      const greet = (name: string = 'Robert') => console.log(`Hello, ${name}`);
+      
+    Spread Operators:
+      const numbers: number[] = [-3, 33, 38, 5];
+      console.log(Math.min(...numbers));
+     
+    Array Destructuring:
+      const testResults: number[] = [3.89, 2.99, 1.38];
+      const [result1, result2, result3] = testResults;
     
+    Object Destructuring: 
+        const scientist: { firstName: string, experience: number } = { firstName: 'Robert', experience: 9000 };
+        const { firstName, experience } = scientist;
+     
+ 5) Classes:
+      Accessors: Private, Public and Protected
+        class Person {
+           private type: string | null = null;
+           protected age: number = 23;
+
+           constructor(public name: string, public userName: string, private email: string) {
+             this.name = name;
+             this.userName = userName;
+             this.email = email;
+           }
+
+           public printAge = () => {
+             console.log(this.age);
+             this.setType('Young guy');
+           }
+
+           private setType = (type: string) => {
+             this.type = type;
+             console.log(this.type);
+           }
+         }
+
+         const person = new Person('Francisco', 'rmolinamir', 'example@email.com');
+         person.printAge(); // Prints: 23
+         // person.setType('Cool guy'); // Not possible, since setType is a private member of Person.
+         
+  Class Inheritance:
+    class Robert extends Person {
+      constructor(userName: string, email: string) {
+        super('Robert Molina', userName, email);
+        this.age = 25;
+        this.printAge()
+      }
+    }
+    
+  Getters & Setters :
+    class Plant {
+      private _species: string = 'Default';
+          get species() {
+            return this._species;
+          }
+          set species(value: string) {
+            if (value.length > 3) {
+              this._species = value;
+            } else {
+              this._species = 'Default';
+            }
+          }
+          public getSpecies = () => this._species
+        }
+  
+  Static Properties & Methods: 
+    class Helpers {
+      static PI: number = 3.14;
+      static calcCircumference(diameter: number): number {
+        return this.PI * diameter;
+      }
+    }
+    
+  Abstract Classes:
+    abstract class Project {
+      projectName: string = 'Default';
+      budget: number = 0;
+      abstract changeName(name: string): void;
+      calcBudget() {
+       return this.budget * 2;
+      }
+    }
+    
+ Private Constructors & Singletons:
+    class OnlyOne {
+      private static instance: OnlyOne;
+      private constructor(public readonly name: string) {}
+      static getInstance() {
+        if (!OnlyOne.instance) {
+          OnlyOne.instance = new OnlyOne('The Only One');
+        }
+        return OnlyOne.instance;
+      }
+    }
+   
+  

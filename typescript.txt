@@ -195,5 +195,28 @@ Refer: https://rmolinamir.github.io/typescript-cheatsheet/#table-of-contents
         return OnlyOne.instance;
       }
     }
-   
-  
+
+6) Modules:
+      All the code add in file are enclosed in a module for using in external file we need to export and import
+      
+    Export: 
+        export const PI = 3.14;
+        export const calculateCircumference = (diameter: number) => {
+          return diameter * PI;
+        }
+        export interface IAppState {
+          counterValue: number;
+        }
+        
+    Default Exports:
+        const calculateRectangle = (width: number, length: number) => {
+          return width * length;
+        }
+        export default calculateRectangle;
+        
+    Import:
+      import { PI, calculateCircumference } from './src/circle';
+      import calculateRectangle from './src/rectangle'; // default export
+      
+    Advanced Module Loading: 
+      

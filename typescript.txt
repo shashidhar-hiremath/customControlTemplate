@@ -360,3 +360,104 @@ Refer: https://rmolinamir.github.io/typescript-cheatsheet/#table-of-contents
            const onlyNumbers = new GenericMath<number>(10, 20);
            const onlyStrings = new GenericMath<string>('10', '20');
            const bothTypes = new GenericMath<number | string>(10, '20');
+           
+11) Decorators: (enhance the functionality)
+        A Decorator is a special kind of declaration that can be attached to a class declaration, method, accessor, property, or parameter. Decorators use the form @expression, where expression must evaluate to a function that will be called at runtime with information about the decorated declaration.
+        
+        tsconfig.json
+        {
+            "compilerOptions": {
+                "target": "ES5",
+                "experimentalDecorators": true
+            }
+        }           
+       
+       Class Decorators : 
+    
+        function logged(constructorFn: Function) {
+            console.log(constructorFn); // Will log the class Person constructor.
+         }
+
+        @logged
+        class Person {
+          constructor() {
+            console.log('Hi!');
+          }
+        }
+        O/P : 
+          ƒ Person()
+        
+        Factory: 
+          function logging(value: boolean) {
+            return value ? logged : () => {console.log('not called')}
+          }
+          
+          @logging(true) // If true, it will return the `logged` decorator, if false, it will execute an empty function.
+          class Car {
+          }
+          O/P:
+            f Car()
+          
+          @logging(false) // If true, it will return the `logged` decorator, if false, it will execute an empty function.
+          class Car {
+          }
+          o/p:
+            'not called'
+            
+        Add function in class: 
+          function addPrint(constructorFn: Function) {
+              constructorFn.prototype.print = function () {
+                this.name = "Maruti"
+              }
+          }
+          
+          @addPrint
+          class Car {
+            private name = 'Suzuki
+          }
+          const c = new Car()
+          (<any>c).print();
+          o/p: 
+            'Suzuki'
+            
+        Freez object :
+          function Frozen(constructor: Function) {
+            Object.freeze(constructor);
+            Object.freeze(constructor.prototype);
+          }
+          
+          @Frozen
+          Class Tree {}
+          
+          Class Plat extend Tree {} // throws error
+     
+     Method Decorator:
+     
+          function ConfirmMsg(message: string) {
+            return function(target: Object, key: string | symbol, descriptor: PropertyDescriptor) {
+              const original = descriptor.value;
+              console.log('-->',target, key);
+              descriptor.value = function (...args: any[]) {
+                const allow = confirm(message);
+                if(allow) {
+                  const result = original.apply(this, args);
+                  return result;
+                } else {
+                  return null;
+                }
+              }
+            }
+          }
+
+          class Classic {
+            private missions: string[] = [];
+            @ConfirmMsg('Run')
+            addMontag(misson: string) {
+              this.missions.push(misson);
+              return this.missions;
+            } 
+          }
+
+          const c = new Classic();
+          console.log(c.addMontag('pop'));
+      

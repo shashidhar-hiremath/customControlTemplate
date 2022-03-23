@@ -832,19 +832,43 @@ Memory / phase 1                | code / phase 2		|
 		})
 		.finally(() => { ... });
 
-	Promise.all: Promise.all is actually a promise that takes an array of promises as an input (an iterable). Then it gets resolved when all the promises get 			resolved or any one of them gets rejected.
+	1) Promise.all: Promise.all is actually a promise that takes an array of promises as an input (an iterable). Then it gets resolved when all the promises get 			resolved or any one of them gets rejected.
 
 		Promise.all([Promise1, Promise2, Promise3])
  			.then(result) => {
    				console.log(result)
  			})
  			.catch(error => console.log(`Error in promises ${error}`));
+			
+		Promise.all([Promise.resolve('resolve1'),Promise.resolve('resolve2')]).then(console.log).catch(console.log)
+		// o/p: ['resolve1', 'resolve2']
+			
+		Promise.all([Promise.resolve('resolve'), Promise.reject('reject'),Promise.resolve('resolve')]).then(console.log).catch(console.log)
+		// o/p: reject
 
-	Promise.race: The Promise.race() static method accepts a list of promises as an iterable object and returns a new promise that fulfills or rejects as soon as 			there is one promise that fulfills or rejects, with the value or reason from that promise.
+	2) Promise.race: The Promise.race() static method accepts a list of promises as an iterable object and returns a new promise that fulfills or rejects as soon as 			there is one promise that fulfills or rejects, with the value or reason from that promise.
 
 		Promise.race([p1, p2])
     			.then(value => console.log(`Resolved: ${value}`))
     			.catch(reason => console.log(`Rejected: ${reason}`));
+		
+		Promise.race([Promise.resolve('resolve1'),Promise.resolve('resolve2'), Promise.reject('reject')]).then(console.log).catch(console.log)
+		// o/p: resolve1
+		
+	3) Promise.any: takes array of promises and returns one value if that is resolved. If all are rejected than it will throw error "AggregateError: All promises 				were rejected" 
+	
+		Promise.any([Promise.reject('reject'),Promise.resolve('resolve')]).then(console.log).catch(console.log)
+		// o/p: resolve
+		Promise.any([Promise.reject('reject'),Promise.reject('reject')]).then(console.log).catch(console.log)
+		// o/p: AggregateError: All promises were rejected
+	
+	4) Promise.allSettled: returns status of all the promises if it is resolved or rejected
+	
+		Promise.allSettled([Promise.reject('reject'),Promise.resolve('resolve')]).then(console.log).catch(console.log)
+		// o/p:
+			0: {status: 'rejected', reason: 'reject'}
+			1: {status: 'fulfilled', value: 'resolve'}
+	
 
 	Async & Await:
 		async function foo() {
@@ -854,6 +878,7 @@ Memory / phase 1                | code / phase 2		|
 				console.log(err)
 			}
 		}
+		async & await shows behaviour like synchronous but not the promise. Async and await uses internally promises. 
 
 27) BOM & DOM :
 	The BOM (Browser Object Model) consists of the objects navigator, history, screen, location and document which are children of window. In the document node is the DOM (Document Object Model), the document object model, which represents the contents of the page. You can manipulate it using javascript.	

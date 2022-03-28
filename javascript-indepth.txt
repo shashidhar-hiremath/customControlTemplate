@@ -509,6 +509,8 @@ Memory / phase 1                | code / phase 2		|
 	filter, map, reduce, rightReduce, forEach, push, pop, shift, unshif, some, every, at, findIndex
 	
 	fill(), indexOf, join, reverse, sort, concat, lastIndexOf, find, entries(), copyWithIn, findLast
+	
+	flat, flatMap
 
 	var arr = [1,2,3,4,5,6,7];
 	entires() =>
@@ -532,6 +534,7 @@ Memory / phase 1                | code / phase 2		|
 		arr.reduce((a,e)=>a+e,10) // 38
 	copyWithin() => 
 		["Banana", "Orange", "Apple", "Mango", "Kiwi", "Papaya"].copyWithin(2,0,2) // Banana,Orange,Banana,Orange,Kiwi,Papaya
+	[1,2,[3,4],[5,6,7]].flat() // [1,2,3,4,5,6,7]
 
 	new Array(7).fill().map((j, i)=>i+1).filter(x=>x%2===0).reduce((a,e) =>a+e,0)
 

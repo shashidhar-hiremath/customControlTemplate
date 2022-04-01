@@ -940,7 +940,32 @@ Memory / phase 1                | code / phase 2		|
 	webkitPersistentStorage: DeprecatedStorageQuota {}
 	webkitTemporaryStorage: DeprecatedStorageQuota {}
 
-29) 
+30) Proxy:
+	Proxy object woud be acting like a layer between operations on an object, 
+	useful for validation and adding custom behaviour 
+
+	const gameSettings = {};
+	const gameSettingsProxy = new Proxy(gameSettings, {
+		get: (o, property) => { // o target object
+			// console.log(o);
+			// console.log(property);
+			return property in o ? o[property] : "decode"; 
+		},
+		set: (o, property, value) => {
+			if(property === 'difficulty' && ['hard', 'modrate', 'easy'].indexOf(value) >= 0){
+            			o[property] = value;
+        		}
+		},
+		has: (o, property) => {
+			if(property === 'difficulty') {
+				return false;
+			}
+		}
+	})
+	gameSettingsProxy.difficulty = "easy"; // easy
+	gameSettingsProxy.difficulty = "none"; // none
+	console.log(gameSettingsProxy.difficulty); // easy
+	console.log('difficulty' in gameSettingsProxy) // false 
 	
 
 		

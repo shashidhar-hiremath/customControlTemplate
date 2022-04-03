@@ -967,5 +967,44 @@ Memory / phase 1                | code / phase 2		|
 	console.log(gameSettingsProxy.difficulty); // easy
 	console.log('difficulty' in gameSettingsProxy) // false 
 	
+31) Reflect:
 
-		
+	Reflect.apply(target, thisArg, argList); // for functions
+	Reflect.get(target, key, handler); // handler is Proxy. get the value of a property
+	Reflect.set(target, key, value, handler); // handler is Proxy. set the value of a property
+	Reflect.has(target, key);// check if it has a property
+	Reflect.delete(target, key); // like the delete operator
+	Reflect.ownKeys(target); // enumerate through the properties
+
+
+	let alex = {
+		name: 'Alex',
+		id: 93,
+		hello: function(a, b) {
+			console.log(`Hello my name is ${this.name}. ${a} ${b}`);
+		}
+	}
+	
+	Reflect.ownKeys(alex) 
+		// o/p: ['name', 'id', 'hello']
+	Reflect.get(alex, 'id')
+		// o/p: 93
+	Reflect.set(alex, 'id', 94)
+		// o/p: true
+	Reflect.get(alex, 'id')
+		// o/p: 94
+	Reflect.has(alex, 'id')
+		// o/p: true
+	Reflect.apply(alex.hello, alex, Reflect.ownKeys(alex))
+		// o/p: Hello my name is Alex. name id
+	Reflect.defineProperty(alex, 'age', {value: 30, enumerable: false})
+		// o/p: true
+	Reflect.get(alex, 'age')
+		// o/p: 30
+	Reflect.deleteProperty(alex, 'id')
+		// o/p: true
+	Reflect.deleteProperty(alex, 'age')
+		// o/p: false
+	Reflect.get(alex, 'id')
+		// o/p: undefined
+			

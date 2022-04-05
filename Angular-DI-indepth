@@ -1,0 +1,318 @@
+// https://www.tektutorialshub.com/angular/angular-dependency-injection/
+What is Angular Dependency Injection
+	Dependency Injection (DI) is a technique in which a class receives its dependencies from external sources rather than creating them itself.
+Benefits of Dependency Injection
+	loosely coupled
+	Easier to Test
+	Reusing the Component
+
+Angular Dependency Injection: players in the Angular Dependency injection Framework.
+	Consumer:
+		The Consumer is the class (Component, Directive, or Service) that needs the Dependency. In the above example, the AppComponent is the Consumer.
+
+	Dependency:
+		The Service that we want to in our consumer. In the above example the ProductService is the Dependency
+
+	Injection Token (DI Token):
+		The Injection Token (DI Token) uniquely identifies a Dependency. We use DI Token when we register dependency
+
+	Provider:
+		The Providers Maintain the list of Dependencies along with their Injection Token. It uses the Injection Token is to identify the Dependency.  
+
+	Injector:
+		Injector holds the Providers and is responsible for resolving the dependencies and injecting the instance of the Dependency to the Consumer
+
+Using Dependency Injection
+	Registering the Dependency with the Injector
+	Component:
+		providers: [ProductService]
+	Module: 
+		@NgModule({
+  			declarations: [...],
+  			imports: [...],
+  			providers: [ProductService],
+  			bootstrap: []
+		})
+
+Angular Dependency Injection Example
+	Next, we need to tell angular that our component needs dependency injection. This is done by using the @Injectable() decorator.
+	@Injectable() decorator is not needed if the class already has other Angular decorators like @Component, @pipe or @directive etc. Because all these are a subtype of Injectible.
+
+Providing Dependency from Angular
+ 	Module
+	ProvidedIn
+	Service Scope: The services that we provide at the root module are app-scoped, which means that we can access them from every component/service within the app.
+
+	Note: Any service provided in the other Modules (Other than the Lazy Loaded Module) is also available for the entire application.
+
+
+Angular Injector, @Injectable & @Inject:
+
+	What is Angular Injector: The Angular Injector is responsible for instantiating the dependency and injecting it into the component or service.The Injector looks for the dependency in the Angular Providers using the Injection token. 
+
+	When is Angular Injector is created: The Angular creates two Injector trees when the Application bootstraps. One is the ModuleInjector tree for the Modules and the other one is the ElementInjector tree which is for the Elements (Components & Directives etc).
+
+	Registering the service with injector: We register all dependencies of the application with the Providers.Where you register your dependency defines the scope of the dependency.
+
+@Injectable: 
+	The Injectable is a decorator, which you need to add to the consumer of the dependency. This decorator tells angular that it must Inject the constructor arguments via the Angular DI system
+
+	Remove @Injectable() from ProductService and you will get the following error.
+	Uncaught Error: Can’t resolve all parameters for ProductService: (?)
+
+@Inject: 
+	The @Inject() is a constructor parameter decorator, which tells angular to Inject the parameter with the dependency provided in the given token. It is a manual way of injecting the dependency. The @Inject takes the Injector token as the parameter. The token is used to locate the dependency in the Providers.
+	export class ProductService{
+   		constructor(@Inject(LoggerService) private loggerService) {
+        		this.loggerService.log("Product Service Constructed");
+    		}
+	}
+-------------------------------------------------------------------------------------------------------------------------------
+Angular Providers: useClass, useValue, useFactory & useExisting
+
+	Angular Providers allows us to register classes, functions, or values (dependencies) with the Angular Dependency Injection system. The Providers are registered using the token. The tokens are used to locate the provider. We can create three types of the token. Type Token, string token & Injection Token. 
+
+What are Angular Providers:
+	The Angular Provider is an instruction (or recipe) that describes how an object for a certain token is created. The Angular Providers is an array of such instructions (Provider). Each provider is uniquely identified by a token (or DI  Token ) in the Providers Array.
+
+	The Angular Components or Angular Services declare the dependencies they need in their constructor. The Injector reads the dependencies and looks for the provider in the providers array using the Token.
+
+Configuring the Angular Provider:
+	
+	providers: [ProductService]
+	// The above is an actual shorthand notation for the following syntax
+	providers :[{ provide: ProductService, useClass: ProductService }]
+
+Provide: The first property is Provide holds the Token or DI Token. The Token can be either a type, a string or an instance of InjectionToken.
+Provider: The second property is the Provider definition object. It tells Angular how to create the instance of the dependency. 
+
+DI Token: 
+	The Injector maintains an internal collection of token-provider in the Providers array. The token acts as a key to that collection & Injector use that Token (key) to locate the Provider.
+
+Type Token: 
+	String token: Instead of using a type, we can use a string literal to register the dependency. This is useful in scenarios where the dependency is a value or 		      	      object etc, which is not represented by a class.
+	
+		{provide:'PRODUCT_SERVICE', useClass: ProductService },
+
+
+	Injection Token: The Angular provides InjectionToken class so as to ensure that the Unique tokens are created. 
+			
+		export const API_URL= new InjectionToken<string>(''); 
+		providers: [ 
+    			{ provide: API_URL, useValue: 'http://SomeEndPoint.com/api' }
+		]
+		constructor(@Inject(API_URL) private apiURL: string) { }
+
+The Types of Provider :
+	1) Class Provider: useClass
+
+		providers :[{ provide: ProductService, useClass: ProductService }]
+
+		In the above, example ProductService is the Token (or key) and it maps to the ProductService Class. In this case both the Class name and token name 		match.
+	
+	2) Value Provider: useValue 
+			The Angular will injects whatever provided in the useValue as it is.
+
+		providers :[ {provide:'USE_FAKE', useValue: true}]
+		constructor(@Inject('USE_FAKE') public useFake: string)
+	
+	3) Factory Provider: useFactory
+		We usually use the useFactory when we want to return an object based on a certain condition.
+		We can also add optional arguments to the factory function using the deps array. The deps array specifies how to inject the arguments.
+
+		 providers: [
+			 {
+     			 	provide: ProductService,
+      				useFactory: (USE_FAKE, LoggerService) =>
+        				USE_FAKE ? new FakeProductService() : new ProductService(LoggerService),
+      				deps: ['USE_FAKE', LoggerService]
+    			}
+  		]
+	
+		Note: useFactory Vs useValue
+			The useValue returns the function as it is. You need to call the function (someFunc()) to get the value.
+			The useFactory invokes the factory function and returns the result.
+	
+	4) Aliased Provider: useExisting
+		Use Aliased Provider useExisting when you want to use the new provider in place of the old Provider.
+		
+		providers: [
+    			{ provide: ProductService, useExisting: NewProductService },
+    			{ provide: NewProductService, useClass: NewProductService }
+		]
+
+Multiple Providers with the same token: will pickup last one
+
+		 providers: [
+    			{ provide: ProductService, useClass: ProductService },
+    			{ provide: ProductService, useClass: FakeProductService },
+  
+ 	 	]
+
+Registering the Dependency at Multiple: will take nearst one
+	
+	@NgModule({})
+	@Component({})
+	
+Singleton services: Each Injector creates a singleton object of the dependency registered by the provider.
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Injection Token in Angular:
+
+	The Dependency Injection system in Angular uses tokens to uniquely identify a Provider. There are three types of tokens that you can create in Angular. They are Type Token, String Token, and Injection Token.
+
+	providers :[{ provide: ProductService, useClass: ProductService }]
+	
+	Provide holds the Token or DI Token. The Tokens act like a key. The DI systems need the key to locate the provider in the Providers array.
+
+String token:
+
+	providers: [{ provide: 'PRODUCT_SERVICE', useClass: ProductService }] 
+
+	Problems with the String Tokens:
+		The String tokens are easy to use but prone to error. Two developers can use the same token at the different parts of the app. The third-party libraries can also use the same token.
+	Note: If we re-use the token, then the last to register overwrites all previously registered tokens.
+
+What is an Injection Token: 
+	It is very similar to string tokens. But instead of using a hardcoded string, we create the Injection Token by creating a new instance of the InjectionToken class. They ensure that the tokens are always unique.
+	
+	Creating an InjectionToken: 
+	import { InjectionToken } from '@angular/core'; 
+	export const APIURL = new InjectionToken<string>('');
+
+	providers: [ 
+		{ provide: APIURL, useValue: 'http://SomeEndPoint.com/api' }
+	]
+
+	export class AppComponent {
+  		constructor(@Inject(APIURL) public ApiUrl: String,) { }
+	}
+The Injection token ensures that the tokens are always unique. Even if the two libraries use the same name for Angular DI injection system is correctly inject the right dependency.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+How Dependency Injection & Resolution Works in Angular
+
+	Injector Tree: Angular Creates not one but two injector trees. Module Injector tree & Element Injector tree.
+
+	Module Injector Tree: 
+		
+						Null Injector
+						       |
+						       |
+						Platform module
+						       |
+						       |
+						Root Module
+						      /\
+						    /    \
+						  /	   \
+					lazy module A      lazy module B
+	
+	Element Injector Tree:
+						Root component
+						      /\
+						    /    \
+						  /	   \
+					Component A      Component B
+					    /\			|
+				    	  /    \		|
+					/	 \		|
+				 compoent C    Component D	Compnent E
+	
+
+	Dependency Resolution: 
+		Angular resolves the dependency in two phases
+		1) First, resolve it using the Element Injector and its parents
+		2) If not found in the Element Injector, then resolve it against the Module Injector and its parents.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Angular Singleton Service: 
+	A singleton service is a service for which only one instance exists in an app.
+	@Injectable({ 
+  		providedIn: 'root' 
+	})
+	export class AppService {
+		...
+	}
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+ProvidedIn root, any & platform in Angular
+
+	The providedIn allow us to specify how Angular should provide the dependency in the service class itself instead of in the Angular Module. It also helps to make the service tree shakable i.e. remove the service from the final bundle if the app does not use it.
+
+	ProvidedIn root:
+		Use the ProvidedIn root option, when you want to register the application-level singleton service.
+
+	ProvidedIn any: 
+		Use ProvidedIn: any when you want every lazy-loaded module to get its own instance of the service.
+	
+	ProvidedIn platform:
+		A special singleton platform injector shared by all applications on the page.
+		Platform Injector is the parent of the Root Module Injector in the Module Injector tree
+		This is useful if you have multiple Angular Apps running on a single page.
+		This is a useful option if you are using Angular Elements, where they can share a single instance of service between them.
+
+		@Injectable({  
+   			providedIn: 'platform'
+		})
+		export class SomeService{
+		}
+		
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Resolution Modifiers:
+
+@Self, @SkipSelf & @Optional Decorators Angular
+
+	@Self, @SkipSelf, @Optional & @Host are Angular Decorators that configure how the DI Framework should resolve the dependencies. These decorators are called Resolution Modifiers because they modify the behavior of injectors.
+
+	@Self: 
+		The @Self decorator instructs Angular to look for the dependency only in the local injector. The local injector is the injector that is part of the 		current component or directive. Child will also pickup parent component dependency
+	
+		if service is not added in the component providers array it will throw error
+		Error: NG0201: No provider for RandomService found in NodeInjector
+
+	@SkipSelf:
+		The @SkipSelf decorator instructs Angular to look for the dependency in the Parent Injector and upwards.
+		But, the child will still picks up the Service provided by the ParentComponent.
+
+	@Optional:
+		Optional marks the dependency as Optional. If the dependency is not found, then it returns null instead of throwing an error
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+@Host Decorator in Angular
+	Parameter decorator on a view-provider parameter of a class constructor that tells the DI framework to resolve the view by checking injectors of child elements, and stop when reaching the host element of the current component.
+
+	Simplify it a bit.
+
+	1. The @Host property searches for the dependency inside the component’s template only.
+	2. It starts with the current Injector and continues to search in the Injector hierarchy until it reaches the host element of the current component.
+	3. It does not search for the dependency in the Providers of the host element.
+	4. But it does search in the ViewProviders of the host element.
+	5. Module injector is never searched in the case of @Host flag
+
+	constructor(@Host() private randomService: RandomService) {
+    		this.randomNo = randomService?.RandomNo;
+  	}
+
+	
+
+	<div class="box">
+      		<p>ChildComponent => {{ randomNo }}</p>
+ 
+      		<div aDir>
+        		<div bDir>
+          			<div cDir></div>
+        		</div>
+      		</div>
+    	</div>
+	@Host will look for the Dependency in this order
+	Providers of cDirective
+	Providers of bDirective
+	Providers of aDirective
+	ViewProviders of ChildComponent

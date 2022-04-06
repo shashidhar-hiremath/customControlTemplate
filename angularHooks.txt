@@ -1312,6 +1312,10 @@ first include angular modules and thean our / we created module
 6)  use RouterModule.forChild in routing for child
 
 7) Lazy loading : preloadingStrategy
+Two possible strategies:
+
+PreloadAllModules, which preloads all lazy-loaded routes, as the name implies
+QuicklinkStrategy, which preloads only the routes associated with links on the current page.
 
 @NgModule({
      imports:[

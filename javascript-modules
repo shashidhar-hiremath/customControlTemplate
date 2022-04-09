@@ -4,7 +4,9 @@ Javascript Module system
 	https://auth0.com/blog/javascript-module-systems-showdown/
 **********************************************************************************************************8
 
-Initial Problem: At the moment that other piece of software is brought into the project a dependency is created between it and the new piece of code. Since these pieces of software need to work together, it is of importance that no conflicts arise between them. This may sound trivial, but without some sort of encapsulation it is a matter of time before two modules conflict with each other
+Initial Problem: At the moment that other piece of software is brought into the project a dependency is created between it and the new piece of code. 
+Since these pieces of software need to work together, it is of importance that no conflicts arise between them.
+This may sound trivial, but without some sort of encapsulation it is a matter of time before two modules conflict with each other
 
 Solution: Encapsulation is essential to prevent conflicts and ease development.
 
@@ -34,7 +36,8 @@ An Ad-Hoc Solution: The Revealing Module Pattern
 
 CommonJS: 
 	
-	1) require: require is a function that can be used to import symbols from another module to the current scope. The parameter passed to require is the id of the module.
+	1) require: require is a function that can be used to import symbols from another module to the current scope. 
+			The parameter passed to require is the id of the module.
 	2) exports: exports is a special object: anything put in it will get exported as a public element. Names for fields are preserved. 
 
 	// In circle.js
@@ -96,7 +99,8 @@ Asynchronous Module Definition (AMD)
 
 RequireJS: 
 
-	RequireJS is a JavaScript library and file loader which manages the dependencies between JavaScript files and in modular programming. It also helps to improve the speed and quality of the code.
+	RequireJS is a JavaScript library and file loader which manages the dependencies between JavaScript files and in modular programming.
+	It also helps to improve the speed and quality of the code.
 
 	Features of RequireJS
 		It manages the dependencies between JavaScript files and improves the speed and quality of the code.
@@ -210,10 +214,13 @@ ES2015 Modules:
 
 CSSOM: CSS Object Model
 	
-	The term CSS Object Model describes a map of all CSS selectors & relevant properties for each selector. These styles can be root elements or have nested children.
-	It’s the map used by the browser to properly render CSS styles on a web page. There’s no easy way to tell a computer that all paragraphs in a .main-content div must have extra line-height.
+	The term CSS Object Model describes a map of all CSS selectors & relevant properties for each selector. 
+	These styles can be root elements or have nested children.
+	It’s the map used by the browser to properly render CSS styles on a web page.
+	There’s no easy way to tell a computer that all paragraphs in a .main-content div must have extra line-height.
 
-	In both the DOM & CSSOM, all information is converted from bytes into digital maps that render every element in a web document. The process works as follows:
+	In both the DOM & CSSOM, all information is converted from bytes into digital maps that render every element in a web document.
+	The process works as follows:
 
 	1. The browser downloads the HTML for a web page.
 	2. While processing the HTML, the parser may bump into a link element referencing an external stylesheet.

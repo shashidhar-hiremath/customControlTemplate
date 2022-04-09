@@ -1,0 +1,251 @@
+Javascript Module system
+
+// References
+	https://auth0.com/blog/javascript-module-systems-showdown/
+**********************************************************************************************************8
+
+Initial Problem: At the moment that other piece of software is brought into the project a dependency is created between it and the new piece of code. Since these pieces of software need to work together, it is of importance that no conflicts arise between them. This may sound trivial, but without some sort of encapsulation it is a matter of time before two modules conflict with each other
+
+Solution: Encapsulation is essential to prevent conflicts and ease development.
+
+An Ad-Hoc Solution: The Revealing Module Pattern
+
+	var myRevealingModule = (function () {
+   		 var privateVar = "Ben Cherry",
+        	     publicVar = "Hey there!";
+
+    		function privateFunction() {
+        		console.log( "Name:" + privateVar );
+    		}
+
+		return {
+        		setName: publicSetName
+		}
+	);
+
+	Cons:
+		No way to programmatically import modules (except by using eval).
+		Dependencies need to be handled manually.
+		Asynchronous loading of modules is not possible.
+		Circular dependencies can be troublesome.
+		Hard to analyze for static code analyzers.
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+CommonJS: 
+	
+	1) require: require is a function that can be used to import symbols from another module to the current scope. The parameter passed to require is the id of the module.
+	2) exports: exports is a special object: anything put in it will get exported as a public element. Names for fields are preserved. 
+
+	// In circle.js
+		const PI = Math.PI;
+		exports.area = (r) => PI * r * r;
+		exports.circumference = (r) => 2 * PI * r;
+	// In some other file
+		const circle = require('./circle.js');
+		console.log( `The area of a circle of radius 4 is ${circle.area(4)}`);
+
+	CommonJS modules were designed with server development in mind.
+
+	Naturally, the API is synchronous. In other words, modules are loaded at the moment and in the order they are required inside a source file.
+
+	Pros
+		Simple: a developer can grasp the concept without looking at the docs.
+		Dependency management is integrated: modules require other modules and get loaded in the needed order.
+		require can be called anywhere: modules can be loaded programmatically.
+		Circular dependencies are supported.
+	Cons
+		Synchronous API makes it not suitable for certain uses (client-side).
+		One file per module.
+		Browsers require a loader library or transpiling.
+		No constructor function for modules (Node supports this though).
+		Hard to analyze for static code analyzers.
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Asynchronous Module Definition (AMD)
+
+			The main difference between AMD and CommonJS lies in its support for asynchronous module loading.
+	
+	define(['module1', ',module2'], function(module1, module2) {
+  		console.log(module1.setName());
+	});
+
+	The function is called only when the requested modules are finished loading. 
+	The define function takes the first argument as an array of dependency modules.
+	These modules are loaded in a non-blocking manner in the background and once the loading is completed, the callback function is executed.
+
+	It is designed to be used in browsers for better startup times and these modules can be objects, functions, constructors, strings, JSON, etc
+
+	Pros
+		Asynchronous loading (better startup times).
+		Circular dependencies are supported.
+		Compatibility for require and exports.
+		Dependency management fully integrated.
+		Modules can be split in multiple files if necessary.
+		Constructor functions are supported.
+		Plugin support (custom loading steps).
+	Cons
+		Slightly more complex syntactically.
+		Loader libraries are required unless transpiled.
+		Hard to analyze for static code analyzers.
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+RequireJS: 
+
+	RequireJS is a JavaScript library and file loader which manages the dependencies between JavaScript files and in modular programming. It also helps to improve the speed and quality of the code.
+
+	Features of RequireJS
+		It manages the dependencies between JavaScript files and improves the speed and quality of the code.
+		It combines and minifies the modules into one script for an optimized experience.
+		It reduces code complexity in large applications.
+		It gathers different JavaScript files from different modules at the time of compilation.
+		It allows for easy debugging as it loads the files from plain script tags.
+
+	Download requirejs file & need to include the require.js file in your libs folder
+
+	|--libs/
+   	    |---main.js
+   	    |---require.js
+   	    |---helper/
+      	    	|----util.js
+	
+	<head>
+      		<script data-main="libs/main" src="libs/require.js"></script>
+   	</head>
+
+	// main.js 
+
+		define(function (require) {
+   			var myteam = require("./team");
+   			var mylogger = require("./player");
+   			alert("Player Name : " + myteam.player);
+   			mylogger.myfunc();
+		});
+
+	// team.js
+
+		define({
+   			player: "Sachin Tendulkar",
+   			team : "India"
+		});
+
+	// player.js
+	
+		define(function (require) {
+   			var myteam = require("./team");
+  			return {
+      				myfunc: function () {
+         				document.write("Name: " + myteam.player + ", Country: " + myteam.team);
+      				}
+   			};
+		});
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ES2015 Modules:
+
+	//------ lib.js ------
+		export const sqrt = Math.sqrt;
+		export function square(x) {
+		    return x * x;
+		}
+		export function diag(x, y) {
+    			return sqrt(square(x) + square(y));
+		}
+
+	//------ main.js ------
+		import { square, diag } from 'lib';
+		console.log(square(11)); // 121
+		console.log(diag(4, 3)); // 5
+
+	import:	
+		The import directive can be used to bring modules into the namespace. 
+	export:	
+		The export directive, on the other hand, can be used to explicitly make elements public.
+
+	Pros
+		Synchronous and asynchronous loading supported.
+		Syntactically simple.
+		Support for static analysis tools.
+		Integrated in the language (eventually supported everywhere, no need for libraries).
+		Circular dependencies supported.
+	Cons
+		Still not supported everywhere.
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+	SystemJS:
+		Universal dynamic module loader
+		Load scrip ondemand	
+	
+
+		<script src="System.js"></script>
+
+		<script>
+			SystemJS.import('Customer.js').then(function () {
+				const cust = new Customer();
+			})
+		</script>
+		
+		
+		Advantage:
+			Less memory footprint
+			Increase application performance
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+CSSOM: CSS Object Model
+	
+	The term CSS Object Model describes a map of all CSS selectors & relevant properties for each selector. These styles can be root elements or have nested children.
+	It’s the map used by the browser to properly render CSS styles on a web page. There’s no easy way to tell a computer that all paragraphs in a .main-content div must have extra line-height.
+
+	In both the DOM & CSSOM, all information is converted from bytes into digital maps that render every element in a web document. The process works as follows:
+
+	1. The browser downloads the HTML for a web page.
+	2. While processing the HTML, the parser may bump into a link element referencing an external stylesheet.
+	3. This CSS stylesheet is then parsed into a map using the CSS Object Model specs.
+	4. The resulting code can then be applied to elements in the DOM.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

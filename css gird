@@ -7,8 +7,8 @@ Css grid : 2 dimentional flow
 
 1) display: grid
 
-2) grid-template-column: 200px 100px; // first column would be 200px width second would be 100px width
-   grid-template-column: 2fr 1fr; // first column would be double the second column 
+2) grid-template-columns: 200px 100px; // first column would be 200px width second would be 100px width
+   grid-template-columns: 2fr 1fr; // first column would be double the second column 
     -----------------------------
     |   200px         |   100px |
     |       2fr       |    1fr  |
@@ -19,7 +19,7 @@ Css grid : 2 dimentional flow
     |         |        |         |         |
     ----------------------------------------
    
-3) grid-template-row: 200px 100px; // first row would be 200px height and second row 100px
+3) grid-template-rows: 200px 100px; // first row would be 200px height and second row 100px
     -----------------------------
     |            |              |
     |            |              |

@@ -1,88 +1,145 @@
-1) Utility type: Record
+ 1) Utility type: Record
 
-const ids: Record<number, string> = {  1: 'a',  2: 'b',};
+const ids: Record<number, string> = {
+  1: 'a',
+  2: 'b',
+}; 
 
-2) null colision : ??
+2) null colision : ?? 
 
 3) MutationFunction:
-  export type MutationFunction = (v: number) => number;
-  export function arrayMutate(numbers: number[], mutate: MutationFunction): numbers[] {
-     return numbers.map(mutate)
-  }
+ 
+              export type MutationFunction = (v: number) => number;
+
+              export function arrayMutate(numbers: number[], mutate: MutationFunction): numbers[] {
+
+                             return numbers.map(mutate)
+
+              }
 
 	const myNewMutateFunc: MutationFunction = (v: number) => v * 200;
+
 	console.log( arrayMutate([1,20,30], (v) => v * 10))
+
+ 
 
 4) Function overloading:
 
 	interface ICoordinate {
-      		x: number;
-          y: number;
-  }
+  		x: number;
+  		y: number;
+	}
 
-	function parseCoordinate(obj: ICoordinate): ICoordinate;	function parseCoordinate(str: string): ICoordinate;	function parseCoordinate(x: number, y: number): ICoordinate;	function parseCoordinate(arg1: unknown, arg2?: unknown): ICoordinate {
-	  let coord: ICoordinate = {	    x: 0,	    y: 0,	  };
+	function parseCoordinate(obj: ICoordinate): ICoordinate;
+	function parseCoordinate(str: string): ICoordinate;
+	function parseCoordinate(x: number, y: number): ICoordinate;
+	function parseCoordinate(arg1: unknown, arg2?: unknown): ICoordinate {
+
+	  let coord: ICoordinate = {
+	    x: 0,
+	    y: 0,
+	  };
+
 	  if (typeof arg1 === 'object') {
-      	    coord = {
-              	      ...(arg1 as ICoordinate),
-                    	    };
-      } else if (typeof arg1 === 'string') {
-        	    (arg1 as string).split(',').forEach((str) => { 
-                const [key, value] = str.split(':');
-                coord[key as 'x' | 'y'] = parseInt(value, 10);
-              	});	  } else {	    coord = {	      x: arg1 as number,	      y: arg2 as number,	    };	  }
+	    coord = {
+	      ...(arg1 as ICoordinate),
+	    };
+	  } else if (typeof arg1 === 'string') {
+	    (arg1 as string).split(',').forEach((str) => {
+	      const [key, value] = str.split(':');
+	      coord[key as 'x' | 'y'] = parseInt(value, 10);
+	    });
+	  } else {
+	    coord = {
+	      x: arg1 as number,
+	      y: arg2 as number,
+	    };
+	  }
 
 	  return coord;
-	}
-	console.log(parseCoordinate(10, 20));	console.log(parseCoordinate({ x: 10, y: 20 }));	console.log(parseCoordinate('x:10, y:20'));
+
+	} 
+
+	console.log(parseCoordinate(10, 20));
+	console.log(parseCoordinate({ x: 10, y: 20 }));
+	console.log(parseCoordinate('x:10, y:20'));
+
+ 
 
 5) Resolve JSON file: for importing json file in ts
 
-tsconfig:
+            tsconfig:
 
-   "resolveJsonModule": true
+                           "resolveJsonModule": true
 
 
 6) Optional callback:
-  function addWithCallback(x: number, y: number, callback?: () => void) {     callback?.();  }
+ 
+              function addWithCallback(x: number, y: number, callback?: () => void) {
+                             callback?.();
+              }
 
 7) Tuples: Array of values
-  function simpleStringState(initial: string): [() => string, (v: string) => void] {
-         let str: string = initial;
-         return [ () => str, (v: string) => { str = v; }]
-  }
+              function simpleStringState(initial: string): [() => string, (v: string) => void] {
+                             let str: string = initial;
+                             return [
+                                           () => str,
+                                           (v: string) => {
+                                                          str = v;
+                                           }
+                             ]
+              }
 
+ 
 
-  const [strGetter, strSetter] = simpleStringState("hello");
-  console.log(strGetter());
-  strSetter("Good bye")
-  console.log(strGetter());
+              const [strGetter, strSetter] = simpleStringState("hello");
+              console.log(strGetter());
+              strSetter("Good bye")
+              console.log(strGetter());
+
 
 8) Generics:
 
-  function simpleStringState<T>(initial: T): [() => T, (v: T) => void] {
-         let str: T = initial;
-          return [
-       () => str, (v: T) => { str = v; }
-     ]
-  }
+              function simpleStringState<T>(initial: T): [() => T, (v: T) => void] {
+                             let str: T = initial;
+                             return [
+                                           () => str,
+                                           (v: T) => {
+                                                          str = v;
+                                           }
+                             ]
+              }
 
-  const [strGetter, strSetter] = simpleStringState("hello");  const [strGetter, strSetter] = simpleStringState<string | null>(null);     
+              const [strGetter, strSetter] = simpleStringState("hello");
+              const [strGetter, strSetter] = simpleStringState<string | null>(null);      
+
 9) KeyOf:
-  function pluck<DataType, KeyType extends keyof DataType>(items: DataType[], key: KeyType): DataType[KeyType][] {     return items.map(item => item[key]);  }
-  const dogs = [
-     {name: "micro", age: 3},     {name: "max", age: 5}
-  ];  console.log(pluck(dogs, 'name'))  console.log(pluck(dogs, 'age'))  
-  
-  -------------------------------------
-  
-  interface BaseEvent {    time: number;    user: string;  }
+              function pluck<DataType, KeyType extends keyof DataType>(items: DataType[], key: KeyType): DataType[KeyType][] {
+                             return items.map(item => item[key]);
+              }
+              const dogs = [
+                             {name: "micro", age: 3},
+                             {name: "max", age: 5}
+              ];
+              console.log(pluck(dogs, 'name'))
+              console.log(pluck(dogs, 'age'))
+              -------------------------------------
+              interface BaseEvent {
+                time: number;
+                user: string;
+              }
 
-  interface EventMap {    addToCart: BaseEvent & { quantity: number , productID: string};    checkout: BaseEvent;  }
+              interface EventMap {
+                addToCart: BaseEvent & { quantity: number , productID: string};
+                checkout: BaseEvent;
+              }
 
-  function sendEvent<Name extends keyof EventMap>(name: Name, data: EventMap[Name]): void {    console.log([name, data]);  }
+              function sendEvent<Name extends keyof EventMap>(name: Name, data: EventMap[Name]): void {
+                console.log([name, data]);
+              }
 
-  sendEvent("addToCart", {productID: 'foo', user: 'baz', quantity: 1, time: 10});  sendEvent("checkout", {time: 20, user: "boo"});
+              sendEvent("addToCart", {productID: 'foo', user: 'baz', quantity: 1, time: 10});
+              sendEvent("checkout", {time: 20, user: "boo"}); 
 10) Utility types:
 
 

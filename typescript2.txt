@@ -1,23 +1,40 @@
 1) Utility type: Record
 
 const ids: Record<number, string> = {  1: 'a',  2: 'b',};
+
 2) null colision : ??
+
 3) MutationFunction:
   export type MutationFunction = (v: number) => number;
   export function arrayMutate(numbers: number[], mutate: MutationFunction): numbers[] {
      return numbers.map(mutate)
   }
+
 	const myNewMutateFunc: MutationFunction = (v: number) => v * 200;
 	console.log( arrayMutate([1,20,30], (v) => v * 10))
 
 4) Function overloading:
 
-	interface ICoordinate {  		x: number;  		y: number;	}
+	interface ICoordinate {
+      		x: number;
+          y: number;
+  }
+
 	function parseCoordinate(obj: ICoordinate): ICoordinate;	function parseCoordinate(str: string): ICoordinate;	function parseCoordinate(x: number, y: number): ICoordinate;	function parseCoordinate(arg1: unknown, arg2?: unknown): ICoordinate {
 	  let coord: ICoordinate = {	    x: 0,	    y: 0,	  };
-	  if (typeof arg1 === 'object') {	    coord = {	      ...(arg1 as ICoordinate),	    };	  } else if (typeof arg1 === 'string') {	    (arg1 as string).split(',').forEach((str) => {	      const [key, value] = str.split(':');	      coord[key as 'x' | 'y'] = parseInt(value, 10);	    });	  } else {	    coord = {	      x: arg1 as number,	      y: arg2 as number,	    };	  }
+	  if (typeof arg1 === 'object') {
+      	    coord = {
+              	      ...(arg1 as ICoordinate),
+                    	    };
+      } else if (typeof arg1 === 'string') {
+        	    (arg1 as string).split(',').forEach((str) => { 
+                const [key, value] = str.split(':');
+                coord[key as 'x' | 'y'] = parseInt(value, 10);
+              	});	  } else {	    coord = {	      x: arg1 as number,	      y: arg2 as number,	    };	  }
+
 	  return coord;
-	}	console.log(parseCoordinate(10, 20));	console.log(parseCoordinate({ x: 10, y: 20 }));	console.log(parseCoordinate('x:10, y:20'));
+	}
+	console.log(parseCoordinate(10, 20));	console.log(parseCoordinate({ x: 10, y: 20 }));	console.log(parseCoordinate('x:10, y:20'));
 
 5) Resolve JSON file: for importing json file in ts
 
@@ -28,25 +45,43 @@ tsconfig:
 
 6) Optional callback:
   function addWithCallback(x: number, y: number, callback?: () => void) {     callback?.();  }
+
 7) Tuples: Array of values
-  function simpleStringState(initial: string): [() => string, (v: string) => void] {     let str: string = initial;     return [
-       () => str,       (v: string) => {          str = v;       }     ]
+  function simpleStringState(initial: string): [() => string, (v: string) => void] {
+         let str: string = initial;
+         return [ () => str, (v: string) => { str = v; }]
   }
 
-  const [strGetter, strSetter] = simpleStringState("hello");  console.log(strGetter());  strSetter("Good bye")  console.log(strGetter());
+
+  const [strGetter, strSetter] = simpleStringState("hello");
+  console.log(strGetter());
+  strSetter("Good bye")
+  console.log(strGetter());
 
 8) Generics:
 
-  function simpleStringState<T>(initial: T): [() => T, (v: T) => void] {     let str: T = initial;     return [
-       () => str,       (v: T) => {          str = v;       }     ]
+  function simpleStringState<T>(initial: T): [() => T, (v: T) => void] {
+         let str: T = initial;
+          return [
+       () => str, (v: T) => { str = v; }
+     ]
   }
+
   const [strGetter, strSetter] = simpleStringState("hello");  const [strGetter, strSetter] = simpleStringState<string | null>(null);     
 9) KeyOf:
-  function pluck<DataType, KeyType extends keyof DataType>(items: DataType[], key: KeyType): DataType[KeyType][] {     return items.map(item => item[key]);  }  const dogs = [
-     {name: "micro", age: 3},     {name: "max", age: 5}  ];  console.log(pluck(dogs, 'name'))  console.log(pluck(dogs, 'age'))  -------------------------------------
+  function pluck<DataType, KeyType extends keyof DataType>(items: DataType[], key: KeyType): DataType[KeyType][] {     return items.map(item => item[key]);  }
+  const dogs = [
+     {name: "micro", age: 3},     {name: "max", age: 5}
+  ];  console.log(pluck(dogs, 'name'))  console.log(pluck(dogs, 'age'))  
+  
+  -------------------------------------
+  
   interface BaseEvent {    time: number;    user: string;  }
+
   interface EventMap {    addToCart: BaseEvent & { quantity: number , productID: string};    checkout: BaseEvent;  }
+
   function sendEvent<Name extends keyof EventMap>(name: Name, data: EventMap[Name]): void {    console.log([name, data]);  }
+
   sendEvent("addToCart", {productID: 'foo', user: 'baz', quantity: 1, time: 10});  sendEvent("checkout", {time: 20, user: "boo"});
 10) Utility types:
 
@@ -59,15 +94,21 @@ tsconfig:
      id: string;
      email?: string;
   }
+
   const merge = (user: MyUser, overrideUser: Partial<MyUser>): MyUser => {
        return {...user, ...overrideUser}
+
      }
+
 
   b) Required : makes all properties required
 
   type RequiredMyUser = Required<MyUser>
+
   c) Pick<Type, Keys>: takes only mentioned properties
-  type JustEmailAndName = Pick<MyUser, "email" | "name">; // {email?: string | undefined; name: string;}  d) Omit: opposite of pick
+  type JustEmailAndName = Pick<MyUser, "email" | "name">; // {email?: string | undefined; name: string;}
+  
+  d) Omit: opposite of pick
   const mapById = (user: MyUser[]): Record<MyUser["id"], Omit<MyUser, "id">> => {
      return users.reduce((a, v) => {
           const {id, ...others} = v;
@@ -76,21 +117,26 @@ tsconfig:
 [id]: others
 
           }
+
        })
   }
+
    
   e) Readonly:
 
   interface Cat {
      name: string;     breed: string;  }
+
   function makeCate(name: string, breed: string): Readonly<Cat> {
-     return {       name,       breed
+     return {       name, breed
      };  }
+
   const cat = makeCat("Random", 'fab');  cat.name = "sdfdsf" // error not possible
 
   For tuple
 
   function makeCoordinates(x: number, y: number) : readonly [number, number] {     return [x, y];  }
+
   use const
   const values = [10,30,50] as const; // you cannot reset the values
 
@@ -100,6 +146,7 @@ tsconfig:
     last: string;
   }
 
+
   function addFullName(name: Name): Name & {
     fullName: string;
   } {
@@ -108,22 +155,31 @@ tsconfig:
       fullName: `${name.first} ${name.last}`
 
     }
+
   }
+
   function permuteRows<T extends (...args:any[])=>void>(iteratorFunc: T, data: Parameters<T>[0][]): ReturnType<T>[] {
     return data.map(iteratorFunc);
   }
+
   console.log(permuteRows(addFullName, [{first: "jack", last: "hill"}]))
 
   g) ConstructorParameters & InstanceType
 
   class PersonFullName {
     constructor(public name: Name) {    }
+
     get fullName() {
       return `${this.name.first} ${this.name.last}`
 
     }
+
   }
-  function createObject<T extends new (...args:any[])=>void>(objectType: T, data: ConstructorParameters<T>[0][]): InstanceType<T>[] {    return data.map((item) => new objectType(item));  }  console.log(createObject(PersonFullName,  [{first: "jack", last: "hill"}]).map(obj => obj.fullName))
+
+
+  function createObject<T extends new (...args:any[])=>void>(objectType: T, data: ConstructorParameters<T>[0][]): InstanceType<T>[] {    return data.map((item) => new objectType(item));  }
+
+  console.log(createObject(PersonFullName,  [{first: "jack", last: "hill"}]).map(obj => obj.fullName))
 11) Mapped Types:
 
 
@@ -139,6 +195,7 @@ tsconfig:
      [s: string]: string | number;
   }
 
+
   const dog: MyFlexibleDogInfo = {
      name: "Abcd",
      breed: "Xyz",
@@ -151,11 +208,13 @@ tsconfig:
      age: number;
   }
 
+
   type OptionsFlags<Type> = {
      [Property in keyof Type]: null;
   };
 
   type DogInfoOptions = OptionsFlags<DogInfo>; // {name: null, age: null}
+
 
   -------------------------------------------------------------------------------------------------
 
@@ -188,11 +247,13 @@ tsconfig:
 
   }
 
+
   const lg: DogInfo = {
     name: "LG",
      age: 13
 
   }
+
 
   type DogInfoListeners = Listeners<DogInfo>;
 
@@ -209,18 +270,23 @@ tsconfig:
 
   abstract class StreetFighter {
      move() {}
+
      flight() {
        console.log(this.attack());
      }
 
+
      abstract attack(): string;
   }
+
 
   class Ryu extends StreetFighter {
      attack() {
        return "bom";
      }
+
   }
+
 
   const ryu = new Ryu();
   ryu.flight();
@@ -236,7 +302,9 @@ tsconfig:
     return (str: string) => {
       console.log(str)
     }
+
   }
+
 
   const logger = myLogFunction();
 
@@ -250,11 +318,15 @@ tsconfig:
         this.completelog += str + '\n';
       }
 
+
       dumpLog() {
         return this.completelog;
       }
+
     }
+
   }
+
 
   const MyLogger = createLoggerClass();
 
@@ -271,15 +343,20 @@ tsconfig:
         this.db[id] = value;
       }
 
+
       get(id: string) : T {
         return this.db[id];
       }
 
+
       getObject(): object {
         return this.db;
       }
+
     }
+
   }
+
 
   const StringDatabase = CreateSimpleMemoryDatabase<string>();
 
@@ -296,8 +373,11 @@ tsconfig:
       dump() {
         console.log(this.getObject())
       }
+
     }
+
   }
+
 
   const DumpableStringDatabase = Dumpable(StringDatabase);
   const sdb2 = new DumpableStringDatabase();
@@ -319,6 +399,7 @@ interface PokemonResults {
   }[];
 }
 
+
 type FetchPokemonResult<T> = T extends undefined
   ? Promise<PokemonResults[]>
   : void;
@@ -337,7 +418,9 @@ function fetchPokemon<T extends undefined | ((data: PokemonResults) => void)>(
   } else {
     return fetch(url).then((resp) => resp.json()) as FetchPokemonResult<T>;
   }
+
 }
+
 
 // fetchPokemon(https://pokeapi.co/api/v2/pokemon?limit=10, (data) => {
 //   data.results.forEach(pokemon => console.log(pokemon.name))
@@ -354,9 +437,11 @@ function fetchPokemon<T extends undefined | ((data: PokemonResults) => void)>(
     name: string;
   }
 
+
   interface cat {
     age: number;
   }
+
 
   type animal = dog | cat;
 
@@ -365,7 +450,9 @@ function fetchPokemon<T extends undefined | ((data: PokemonResults) => void)>(
 
   }
 
+
   type z<T> = T extends dog ? dog & {petname: string} : cat & {jump: number}
+
 
   const h = a as z<typeof a>;
 
